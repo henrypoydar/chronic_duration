@@ -38,7 +38,7 @@ describe ChronicDuration, '.parse' do
     ChronicDuration.parse('12 mins 3 seconds').is_a?(Integer).should be_true
   end
   
-  @exemplars.each do |k,v|
+  @exemplars.each do |k, v|
     it "should properly parse a duration like #{k}" do
       ChronicDuration.parse(k).should == v
     end
@@ -51,7 +51,7 @@ end
 
 describe ChronicDuration, "private methods" do
   
-  describe "#filter_by_type" do
+  describe ".filter_by_type" do
     
     it "should take a chrono-formatted time like 3:14 and return a human time like 3 minutes 14 seconds" do
       ChronicDuration.instance_eval("filter_by_type('3:14')").should == '3 minutes 14 seconds'
@@ -67,7 +67,7 @@ describe ChronicDuration, "private methods" do
   
   end
   
-  describe "#cleanup" do
+  describe ".cleanup" do
     
     it "should clean up extraneous words" do
       ChronicDuration.instance_eval("cleanup('4 days and 11 hours')").should == '4 days 11 hours'

@@ -13,8 +13,7 @@ private
     words = string.split(' ')
     words.each_with_index do |v, k|
       if v =~ float_matcher
-        #val += convert_to_number(v)
-        val += ( convert_to_number(v) * duration_units_seconds_multiplier(words[k + 1] || 'seconds') )
+        val += (convert_to_number(v) * duration_units_seconds_multiplier(words[k + 1] || 'seconds'))
       end
     end
     val
@@ -113,7 +112,7 @@ private
   end
   
   def white_list
-    self.mappings.map { |k,v| k }
+    self.mappings.map {|k, v| k}
   end
   
 end
