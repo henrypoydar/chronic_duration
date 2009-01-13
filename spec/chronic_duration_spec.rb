@@ -15,31 +15,31 @@ end
 describe ChronicDuration, '.parse' do
   
   @exemplars = { 
-    '1:20'          => 60 + 20,
-    '1:20.51'       => 60 + 20.51,
-    '4:01:01'       => 4 * 3600 + 60 + 1,
-    '3 mins 4 sec'  => 3 * 60 + 4,
-    '2 hrs 20 min'  => 2 * 3600 + 20 * 60,
-    '2h20min'       => 2 * 3600 + 20 * 60
+    '1:20'                  => 60 + 20,
+    '1:20.51'               => 60 + 20.51,
+    '4:01:01'               => 4 * 3600 + 60 + 1,
+    '3 mins 4 sec'          => 3 * 60 + 4,
+    '2 hrs 20 min'          => 2 * 3600 + 20 * 60,
+    '2h20min'               => 2 * 3600 + 20 * 60,
+    '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,
+    '2.5 hrs'               => 2.5 * 3600,
+    '47 yrs 6 mos and 4.5d' => 47 * 31557600 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600
   }
   
-  it "should raise a canned error if the parsing fails" do
-    lambda { ChronicDuration.parse('gobblygoo') }.should raise_error
-    lambda { ChronicDuration.parse('4 hours 20 minutes') }.should_not raise_error
+  it "should return nil if the string can't be parsed" do
+    ChronicDuration.parse('gobblygoo').should be_nil
   end
   
   it "should return a float if seconds are in decimals" do
-    pending
+    ChronicDuration.parse('12 mins 3.141 seconds').is_a?(Float).should be_true
   end
   
   it "should return an integer unless the seconds are in decimals" do
-    pending
-    
+    ChronicDuration.parse('12 mins 3 seconds').is_a?(Integer).should be_true
   end
   
   @exemplars.each do |k,v|
     it "should properly parse a duration like #{k}" do
-      pending
       ChronicDuration.parse(k).should == v
     end
   end

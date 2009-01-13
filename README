@@ -17,11 +17,20 @@ Usage
     >> ChronicDuration.parse('4 minutes and 30 seconds')
     => 270
     
+Nil is returned if the string can't be parsed
+
 Examples of parse-able strings:
 
-* TODO
+* '12.4 secs'
+* '1:20' 
+* '1:20.51'
+* '4:01:01'
+* '3 mins 4 sec'
+* '2 hrs 20 min'
+* '2h20min'
+* '6 mos 1 day'
+* '47 yrs 6 mos and 4d'
 
-A runtime error is raised if the string cannot be parsed
     
 TODO
 ----

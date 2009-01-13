@@ -2,29 +2,22 @@ module ChronicDuration
   extend self
   
   def parse(string)
-    
-    begin
-      result = calculate_from_words(cleanup(string))
-    rescue
-      raise error_message
-    end
-
-    unless result.is_a?(Integer) || result.is_a?(Float)
-      raise error_message
-    end
-    
-    result
-    
+    result = calculate_from_words(cleanup(string))
+    result == 0 ? nil : result
   end  
   
 private
   
   def calculate_from_words(string)
-    
-    # words = string.split(' ')
-    #    words.each do |word|
-    #      
-    #    end
+    val = 0
+    words = string.split(' ')
+    words.each_with_index do |v, k|
+      if v =~ float_matcher
+        #val += convert_to_number(v)
+        val += ( convert_to_number(v) * duration_units_seconds_multiplier(words[k + 1] || 'seconds') )
+      end
+    end
+    val
   end
   
   def cleanup(string)
@@ -41,7 +34,7 @@ private
     %w(seconds minutes hours days weeks months years)
   end
   def duration_units_seconds_multiplier(unit)
-    return 0 unless self.duration_units_list.include?(unit)
+    return 0 unless duration_units_list.include?(unit)
     case unit
     when 'years';   31557600 # accounts for leap years
     when 'months';  3600 * 24 * 30
