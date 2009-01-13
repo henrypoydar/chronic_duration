@@ -39,6 +39,7 @@ describe ChronicDuration, '.parse' do
   
   @exemplars.each do |k,v|
     it "should properly parse a duration like #{k}" do
+      pending
       ChronicDuration.parse(k).should == v
     end
   end
@@ -50,13 +51,36 @@ end
 
 describe ChronicDuration, "private methods" do
   
-  describe "#filter_type" do
-    it "should take a chrono-formatted time like 3:14 and return a human time like 3 hours 14 minutes" do
-      ChronicDuration.instance_eval("filter_type('3:14')").should == '3 minutes 14 seconds'
+  describe "#filter_by_type" do
+    
+    it "should take a chrono-formatted time like 3:14 and return a human time like 3 minutes 14 seconds" do
+      ChronicDuration.instance_eval("filter_by_type('3:14')").should == '3 minutes 14 seconds'
     end
+    
+    it "should take a chrono-formatted time like 12:10:14 and return a human time like 12 hours 10 minutes 14 seconds" do
+      ChronicDuration.instance_eval("filter_by_type('12:10:14')").should == '12 hours 10 minutes 14 seconds'
+    end
+    
     it "should return the input if it's not a chrono-formatted time" do
-      ChronicDuration.instance_eval("filter_type('4 hours')").should == '4 hours'
+      ChronicDuration.instance_eval("filter_by_type('4 hours')").should == '4 hours'
     end
+  
+  end
+  
+  describe "#cleanup" do
+    
+    it "should clean up extraneous words" do
+      ChronicDuration.instance_eval("cleanup('4 days and 11 hours')").should == '4 days 11 hours'
+    end
+    
+    it "should cleanup extraneous spaces" do
+      ChronicDuration.instance_eval("cleanup('  4 days and 11     hours')").should == '4 days 11 hours'
+    end
+    
+    it "should insert spaces where there aren't any" do
+      ChronicDuration.instance_eval("cleanup('4m11.5s')").should == '4 minutes 11.5 seconds'
+    end
+    
   end
   
 end 
