@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   
   s.name          = "chronic_duration"
-  s.version       = "0.2.0"
-  s.date          = "2009-01-11"
+  s.version       = "0.3.1"
+  s.date          = "2009-01-13"
   
   s.summary       = "A Ruby natural language parser for elapsed time"
   s.description   = "A simple Ruby natural language parser for elapsed time. 
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.test_files    = Dir['spec/**/*.rb', 'Rakefile']
   
   s.has_rdoc      = true
-  s.rdoc_options  = ['--line-numbers', '--inline-source', '--main', 'README']
+  s.rdoc_options  = ['--line-numbers', '--inline-source', '--main', 'README.rdoc']
   
   s.author        = "Henry Poydar"
   s.email         = "henry@poydar.com"

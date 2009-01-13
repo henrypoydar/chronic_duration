@@ -1,16 +1,13 @@
-Chronic Duration
-================
+= Chronic Duration
 
 A simple Ruby natural language parser for elapsed time. (For example, 4 hours and 30 minutes, 6 minutes 4 seconds, 3 days, etc.) Returns all results in seconds. Will return an integer unless you get tricky and need a float. (4 minutes and 13.47 seconds, for example.)
 
-Installation
-------------
+== Installation
 
     $ sudo gem sources -a http://gems.github.com
     $ sudo gem install hpoydar-chronic_duration
 
-Usage
------
+== Usage
 
     >> require 'chronic_duration'
     => true
@@ -32,8 +29,7 @@ Examples of parse-able strings:
 * '47 yrs 6 mos and 4d'
 
     
-TODO
-----
+== TODO
 
 * Benchmark and optimize
 * Context specific matching (E.g., for '4m30s', assume 'm' is minutes)
