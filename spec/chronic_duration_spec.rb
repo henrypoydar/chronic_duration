@@ -48,6 +48,11 @@ end
 
 describe ChronicDuration, '.output' do
   
+  it "should return nil if the input can't be parsed" do
+    ChronicDuration.parse('gobblygoo').should be_nil
+  end
+  
+  
   @exemplars = { 
     '1 min 20 secs'                  => 60 + 20,
     '1 min 20.51 secs'               => 60 + 20.51,
