@@ -1,6 +1,8 @@
 = Chronic Duration
 
-A simple Ruby natural language parser for elapsed time. (For example, 4 hours and 30 minutes, 6 minutes 4 seconds, 3 days, etc.) Returns all results in seconds. Will return an integer unless you get tricky and need a float. (4 minutes and 13.47 seconds, for example.)
+A simple Ruby natural language parser for elapsed time. (For example, 4 hours and 30 minutes, 6 minutes 4 seconds, 3 days, etc.) Returns all results in seconds. Will return an integer unless you get tricky and need a float. (4 minutes and 13.47 seconds, for example.) 
+
+The reverse can also be accomplished with the output method.  So pass in seconds and you will get values like 4 ins 31.51 secs.
 
 == Installation
 
@@ -13,6 +15,8 @@ A simple Ruby natural language parser for elapsed time. (For example, 4 hours an
     => true
     >> ChronicDuration.parse('4 minutes and 30 seconds')
     => 270
+    >> ChronicDuration.output(270)
+    => 4 mins 30 secs
     
 Nil is returned if the string can't be parsed
 
@@ -34,3 +38,4 @@ Examples of parse-able strings:
 * Benchmark and optimize
 * Context specific matching (E.g., for '4m30s', assume 'm' is minutes)
 * Smartly parse vacation-like durations (E.g., '4 days and 3 nights')
+* Allow alternative formatting for output

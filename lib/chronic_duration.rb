@@ -6,7 +6,56 @@ module ChronicDuration
     result == 0 ? nil : result
   end  
   
+  # Refactor, DRY up, make recursive
+  def output(seconds)
+    
+    years = months = days = hours = minutes = 0
+
+    if seconds >= 60
+      minutes = (seconds / 60).to_i 
+      seconds = seconds % 60
+      if minutes >= 60
+        hours = (minutes / 60).to_i
+        minutes = (minutes % 60).to_i
+        if hours >= 24
+          days = (hours / 24).to_i
+          hours = (hours % 24).to_i
+          if days >= 30
+            months = (days / 30).to_i
+            days = (days % 30).to_i
+            if months >= 12
+              years = (months / 12).to_i
+              months = (months % 12).to_i
+            end
+          end
+        end
+      end
+    end
+    
+    result = []
+    
+    result << pluralize(years, 'yr')
+    result << pluralize(months, 'mo')
+    result << pluralize(days, 'day')
+    result << pluralize(hours, 'hr')
+    result << pluralize(minutes, 'min')
+    result << pluralize(seconds, 'sec')
+
+    result = result.join(' ').squeeze(' ').strip
+    return nil if result.length == 0
+
+    result
+  end
+  
 private
+  
+  # A poor man's pluralizer
+  def pluralize(number, word)
+    return '' if number == 0
+    res = "#{number} #{word}"
+    res << 's' unless number == 1
+    res
+  end
   
   def calculate_from_words(string)
     val = 0

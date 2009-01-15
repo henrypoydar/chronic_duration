@@ -46,6 +46,31 @@ describe ChronicDuration, '.parse' do
   
 end
 
+describe ChronicDuration, '.output' do
+  
+  @exemplars = { 
+    '1 min 20 secs'                  => 60 + 20,
+    '1 min 20.51 secs'               => 60 + 20.51,
+    '3 mins 20.51 secs'               => 3 * 60 + 20.51,
+    '4 hrs 1 min 1 sec'               => 4 * 3600 + 60 + 1,
+    '3 mins 4 secs'          => 3 * 60 + 4,
+    '2 hrs 20 mins'          => 2 * 3600 + 20 * 60,
+    '1 mo 1 day'           => 1 * 30 * 24 * 3600 + 24 * 3600,
+    '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,
+    '6 mos 2 days'           => 6 * 30 * 24 * 3600 + 2 * 24 * 3600,
+    '2 hrs 30 mins'               => 2.5 * 3600
+  }
+  
+  
+  @exemplars.each do |k, v|
+    it "should properly output a duration of #{v}" do
+      ChronicDuration.output(v).should == k
+    end
+  end
+  
+end
+
+
 # Some of the private methods deserve some spec'ing to aid
 # us in development...
 

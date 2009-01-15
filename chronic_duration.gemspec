@@ -1,14 +1,15 @@
 Gem::Specification.new do |s|
   
   s.name          = "chronic_duration"
-  s.version       = "0.3.1"
-  s.date          = "2009-01-13"
+  s.version       = "0.4.0"
+  s.date          = "2009-01-14"
   
   s.summary       = "A Ruby natural language parser for elapsed time"
   s.description   = "A simple Ruby natural language parser for elapsed time. 
     (For example, 4 hours and 30 minutes, 6 minutes 4 seconds, 3 days, etc.) 
     Returns all results in seconds. Will return an integer unless you get tricky and need a float. 
-    (4 minutes and 13.47 seconds, for example.)"
+    (4 minutes and 13.47 seconds, for example.) The reverse can also be performed
+    via the output method."
   
   s.require_path  = 'lib'
   s.files         = Dir['lib/**/*.rb', '[A-Z]*']
