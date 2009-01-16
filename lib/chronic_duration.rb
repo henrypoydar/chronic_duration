@@ -7,10 +7,12 @@ module ChronicDuration
   end  
   
   # Refactor, DRY up, make recursive
-  def output(seconds)
+  def output(seconds, opts = {})
+    
+    opts[:format] ||= :default
     
     years = months = days = hours = minutes = 0
-
+    
     if seconds >= 60
       minutes = (seconds / 60).to_i 
       seconds = seconds % 60
@@ -32,28 +34,49 @@ module ChronicDuration
       end
     end
     
-    result = []
+    # TODO: 
+    # Fix this
+    # Add chrono (00:00) format with sub of last :
     
-    result << pluralize(years, 'yr')
-    result << pluralize(months, 'mo')
-    result << pluralize(days, 'day')
-    result << pluralize(hours, 'hr')
-    result << pluralize(minutes, 'min')
-    result << pluralize(seconds, 'sec')
+    case opts[:format]
+    when :short
+      dividers = [ 
+        year => 'y', months => 'm', days => 'd', hours => 'h', minutes => 'm', seconds => 's', 
+        :pluralize => false ]
+    when :default 
+      dividers = [ 
+        year => ' yr', months => ' mo', days => ' day', hours => ' hr', minutes => ' min', seconds => ' secs', 
+        :pluralize => true ]
+    when :long 
+      dividers = [
+        year => ' year', months => ' month', days => ' day', hours => ' hour', minutes => ' minute', seconds => ' second', 
+        :pluralize => true ]
+    end
+    
+    result = []
+    dividers.each do |divider|
+      result << humanize_time_unit()
+    end
+    
+      result << pluralize(years, 'yr')
+      result << pluralize(months, 'mo')
+      result << pluralize(days, 'day')
+      result << pluralize(hours, 'hr')
+      result << pluralize(minutes, 'min')
+      result << pluralize(seconds, 'sec')
 
     result = result.join(' ').squeeze(' ').strip
-    return nil if result.length == 0
+    result.length == 0 ? nil : result
 
-    result
   end
   
 private
   
   # A poor man's pluralizer
-  def pluralize(number, word)
+  def humanize_time_unit(number, unit, pluralize)
     return '' if number == 0
-    res = "#{number} #{word}"
-    res << 's' unless number == 1
+    res = "#{number}#{unit}"
+    res << 's' if !(number == 1) && pluralize
     res
   end
   
