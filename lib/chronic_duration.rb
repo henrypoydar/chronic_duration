@@ -34,48 +34,55 @@ module ChronicDuration
       end
     end
     
-    # TODO: 
-    # Fix this
-    # Add chrono (00:00) format with sub of last :
+    joiner = ' '
+    process = nil
     
     case opts[:format]
     when :short
-      dividers = [ 
-        year => 'y', months => 'm', days => 'd', hours => 'h', minutes => 'm', seconds => 's', 
-        :pluralize => false ]
+      dividers = { 
+        :years => 'y', :months => 'm', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
     when :default 
-      dividers = [ 
-        year => ' yr', months => ' mo', days => ' day', hours => ' hr', minutes => ' min', seconds => ' secs', 
-        :pluralize => true ]
+      dividers = {
+        :years => ' yr', :months => ' mo', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
+        :pluralize => true }
     when :long 
-      dividers = [
-        year => ' year', months => ' month', days => ' day', hours => ' hour', minutes => ' minute', seconds => ' second', 
-        :pluralize => true ]
+      dividers = {
+        :years => ' year', :months => ' month', :days => ' day', :hours => ' hour', :minutes => ' minute', :seconds => ' second', 
+        :pluralize => true }
+    when :chrono
+      dividers = {
+        :years => ':', :months => ':', :days => ':', :hours => ':', :minutes => ':', :seconds => ':', :keep_zero => true }
+      process = lambda do |str|
+        # Pad zeros
+        # Get rid of lead off times if they are zero
+        # Get rid of lead off zero
+        # Get rid of trailing :
+        str.gsub(/\b\d\b/) { |d| ("%02d" % d) }.gsub(/^(00:)+/, '').gsub(/^0/, '').gsub(/:$/, '')
+      end
+      joiner = ''
     end
     
     result = []
-    dividers.each do |divider|
-      result << humanize_time_unit()
+    [:years, :months, :days, :hours, :minutes, :seconds].each do |t|
+      result << humanize_time_unit( eval(t.to_s), dividers[t], dividers[:pluralize], dividers[:keep_zero] )
     end
     
-      result << pluralize(years, 'yr')
-      result << pluralize(months, 'mo')
-      result << pluralize(days, 'day')
-      result << pluralize(hours, 'hr')
-      result << pluralize(minutes, 'min')
-      result << pluralize(seconds, 'sec')
-
-    result = result.join(' ').squeeze(' ').strip
+    result = result.join(joiner).squeeze(' ').strip
+    
+    if process
+      result = process.call(result)
+    end
+    
     result.length == 0 ? nil : result
 
   end
   
 private
   
-  # A poor man's pluralizer
-  def humanize_time_unit(number, unit, pluralize)
-    return '' if number == 0
+  def humanize_time_unit(number, unit, pluralize, keep_zero)
+    return '' if number == 0 && !keep_zero
     res = "#{number}#{unit}"
+    # A poor man's pluralizer
     res << 's' if !(number == 1) && pluralize
     res
   end

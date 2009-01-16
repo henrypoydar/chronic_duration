@@ -52,24 +52,56 @@ describe ChronicDuration, '.output' do
     ChronicDuration.parse('gobblygoo').should be_nil
   end
   
-  
   @exemplars = { 
-    '1 min 20 secs'                  => 60 + 20,
-    '1 min 20.51 secs'               => 60 + 20.51,
-    '3 mins 20.51 secs'               => 3 * 60 + 20.51,
-    '4 hrs 1 min 1 sec'               => 4 * 3600 + 60 + 1,
-    '3 mins 4 secs'          => 3 * 60 + 4,
-    '2 hrs 20 mins'          => 2 * 3600 + 20 * 60,
-    '1 mo 1 day'           => 1 * 30 * 24 * 3600 + 24 * 3600,
-    '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,
-    '6 mos 2 days'           => 6 * 30 * 24 * 3600 + 2 * 24 * 3600,
-    '2 hrs 30 mins'               => 2.5 * 3600
+    (60 + 20) => 
+      { 
+        :short    => '1m 20s',
+        :default  => '1 min 20 secs',
+        :long     => '1 minute 20 seconds',
+        :chrono   => '1:20'
+      },
+    (60 + 20.51) => 
+      { 
+        :short    => '1m 20.51s',
+        :default  => '1 min 20.51 secs',
+        :long     => '1 minute 20.51 seconds',
+        :chrono   => '1:20.51'
+      },
+    (4 * 3600 + 60 + 1) => 
+      { 
+        :short    => '4h 1m 1s',
+        :default  => '4 hrs 1 min 1 sec',
+        :long     => '4 hours 1 minute 1 second',
+        :chrono   => '4:01:01'
+      },
+    (2 * 3600 + 20 * 60) => 
+      { 
+        :short    => '2h 20m',
+        :default  => '2 hrs 20 mins',
+        :long     => '2 hours 20 minutes',
+        :chrono   => '2:20'
+      },
+    (2 * 3600 + 20 * 60) => 
+      { 
+        :short    => '2h 20m',
+        :default  => '2 hrs 20 mins',
+        :long     => '2 hours 20 minutes',
+        :chrono   => '2:20:00'
+      },
+    (6 * 30 * 24 * 3600 + 24 * 3600) => 
+      { 
+        :short    => '6m 1d',
+        :default  => '6 mos 1 day',
+        :long     => '6 months 1 day',
+        :chrono   => '6:01:00:00:00' # Yuck. FIXME
+      }
   }
   
-  
   @exemplars.each do |k, v|
-    it "should properly output a duration of #{v}" do
-      ChronicDuration.output(v).should == k
+    v.each do |key, val|
+      it "should properly output a duration of #{k} seconds as #{val} using the #{key.to_s} format option" do
+        ChronicDuration.output(k, :format => key).should == val
+      end
     end
   end
   
