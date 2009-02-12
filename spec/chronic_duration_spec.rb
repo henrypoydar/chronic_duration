@@ -19,6 +19,7 @@ describe ChronicDuration, '.parse' do
     '1:20.51'               => 60 + 20.51,
     '4:01:01'               => 4 * 3600 + 60 + 1,
     '3 mins 4 sec'          => 3 * 60 + 4,
+    'three mins four sec'          => 3 * 60 + 4,
     '2 hrs 20 min'          => 2 * 3600 + 20 * 60,
     '2h20min'               => 2 * 3600 + 20 * 60,
     '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,

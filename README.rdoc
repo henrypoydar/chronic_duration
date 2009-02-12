@@ -37,7 +37,11 @@ Examples of parse-able strings:
 * '2h20min'
 * '6 mos 1 day'
 * '47 yrs 6 mos and 4d'
+* 'two hours and twenty minutes'
+    
+== Contributors
 
+jduff
     
 == TODO
 
