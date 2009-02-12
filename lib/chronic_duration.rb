@@ -1,3 +1,4 @@
+require 'numerizer'
 module ChronicDuration
   extend self
   
@@ -99,7 +100,7 @@ private
   end
   
   def cleanup(string)
-    res = filter_by_type(string)
+    res = filter_by_type(Numerizer.numerize(string))
     res = res.gsub(float_matcher) {|n| " #{n} "}.squeeze(' ').strip
     res = filter_through_white_list(res)
   end

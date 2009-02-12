@@ -23,7 +23,8 @@ describe ChronicDuration, '.parse' do
     '2h20min'               => 2 * 3600 + 20 * 60,
     '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,
     '2.5 hrs'               => 2.5 * 3600,
-    '47 yrs 6 mos and 4.5d' => 47 * 31557600 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600
+    '47 yrs 6 mos and 4.5d' => 47 * 31557600 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
+    'two hours and twenty minutes' => 2 * 3600 + 20 * 60
   }
   
   it "should return nil if the string can't be parsed" do
