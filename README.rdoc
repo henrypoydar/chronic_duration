@@ -17,11 +17,11 @@ The reverse can also be accomplished with the output method.  So pass in seconds
     => 270
     >> ChronicDuration.output(270)
     => 4 mins 30 secs
-    >> ChronicDuration.output(270, :short)
+    >> ChronicDuration.output(270, :format => :short)
     => 4m 30s
-    >> ChronicDuration.output(270, :long)
+    >> ChronicDuration.output(270, :format => :long)
     => 4 minutes 30 seconds
-    >> ChronicDuration.output(270, :chrono)
+    >> ChronicDuration.output(270, :format => :chrono)
     => 4:30
     
 Nil is returned if the string can't be parsed
