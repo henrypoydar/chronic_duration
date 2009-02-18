@@ -41,7 +41,7 @@ Examples of parse-able strings:
     
 == Contributors
 
-jduff
+jduff, olauzon
     
 == TODO
 
