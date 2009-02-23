@@ -11,7 +11,7 @@ end
 Rake::RDocTask.new do |task|
   task.rdoc_dir = 'doc'
   task.title = 'chronic_duration'
-  task.options << '--line-numbers' << '--inline-source' << '--main' << 'README'
-  task.rdoc_files.include 'README'
+  task.options << '--line-numbers' << '--inline-source' << '--main' << 'README.rdoc'
+  task.rdoc_files.include 'README.rdoc'
   task.rdoc_files.include 'lib/**/*.rb'
 end
