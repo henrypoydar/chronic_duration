@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   
   s.name          = "chronic_duration"
-  s.version       = "0.7.3"
+  s.version       = "0.7.4"
   s.date          = "2009-02-23"
   
   s.summary       = "A Ruby natural language parser for elapsed time"

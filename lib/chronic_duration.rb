@@ -11,7 +11,7 @@ module ChronicDuration
   end  
   
   # Given an integer and an optional format,
-  # returns a formatted representing elapsed time
+  # returns a formatted string representing elapsed time
   def output(seconds, opts = {})
     
     opts[:format] ||= :default
