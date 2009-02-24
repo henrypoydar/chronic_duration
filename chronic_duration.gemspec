@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   
   s.name          = "chronic_duration"
-  s.version       = "0.7.1"
+  s.version       = "0.7.3"
   s.date          = "2009-02-23"
   
   s.summary       = "A Ruby natural language parser for elapsed time"
@@ -12,11 +12,12 @@ Gem::Specification.new do |s|
     via the output method."
   
   s.require_path  = 'lib'
-  s.files         = Dir['lib/**/*.rb', '[A-Z]*']
-  s.test_files    = Dir['spec/**/*.rb', 'Rakefile']
+  s.files         = ["lib/chronic_duration.rb", "lib/numerizer.rb", "spec/chronic_duration_spec.rb", "spec/spec_helper.rb"]
+  s.test_files    = ["spec/chronic_duration_spec.rb"]
   
   s.has_rdoc      = true
   s.rdoc_options  = ['--line-numbers', '--inline-source', '--main', 'README.rdoc']
+  s.extra_rdoc_files = ['README.rdoc']
   
   s.author        = "Henry Poydar"
   s.email         = "henry@poydar.com"

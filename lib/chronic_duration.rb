@@ -2,12 +2,16 @@ require 'numerizer'
 module ChronicDuration
   extend self
   
+  # Given a string representation of elapsed time,
+  # return an integer (or float, if fractions of a
+  # second are input)
   def parse(string)
     result = calculate_from_words(cleanup(string))
     result == 0 ? nil : result
   end  
   
-  # Refactor, DRY up, make recursive
+  # Given an integer and an optional format,
+  # returns a formatted representing elapsed time
   def output(seconds, opts = {})
     
     opts[:format] ||= :default
