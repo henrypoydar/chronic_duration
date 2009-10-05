@@ -6,8 +6,8 @@ The reverse can also be accomplished with the output method.  So pass in seconds
 
 == Installation
 
-    $ sudo gem sources -a http://gems.github.com
-    $ sudo gem install hpoydar-chronic_duration
+    $ sudo gem sources -a http://gemcutter.org
+    $ sudo gem install chronic_duration
 
 == Usage
 
