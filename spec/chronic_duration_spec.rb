@@ -1,16 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper'
-
-describe ChronicDuration, 'gem' do
-  
-  it "should build" do
-    spec = eval(File.read("#{File.dirname(__FILE__)}/../chronic_duration.gemspec"))
-    FileUtils.rm_f(File.dirname(__FILE__) + "/../chronic_duration-#{spec.version}.gem")
-    system "cd #{File.dirname(__FILE__)}/.. && gem build chronic_duration.gemspec -q --no-verbose"
-    File.exists?(File.dirname(__FILE__) + "/../chronic_duration-#{spec.version}.gem").should be_true
-    FileUtils.rm_f(File.dirname(__FILE__) + "/../chronic_duration-#{spec.version}.gem")
-  end
-  
-end
+require 'chronic_duration'
 
 describe ChronicDuration, '.parse' do
   
