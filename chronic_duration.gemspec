@@ -24,8 +24,7 @@ Gem::Specification.new do |s|
      "chronic_duration.gemspec",
      "lib/chronic_duration.rb",
      "lib/numerizer.rb",
-     "spec/chronic_duration_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/chronic_duration_spec.rb"
   ]
   s.homepage = %q{http://github.com/hpoydar/chronic_duration}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -33,8 +32,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{A Ruby natural language parser for elapsed time}
   s.test_files = [
-    "spec/chronic_duration_spec.rb",
-     "spec/spec_helper.rb"
+    "spec/chronic_duration_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
