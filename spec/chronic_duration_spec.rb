@@ -47,6 +47,7 @@ describe ChronicDuration, '.output' do
   @exemplars = { 
     (60 + 20) => 
       { 
+        :micro    => '1m20s',
         :short    => '1m 20s',
         :default  => '1 min 20 secs',
         :long     => '1 minute 20 seconds',
@@ -54,6 +55,7 @@ describe ChronicDuration, '.output' do
       },
     (60 + 20.51) => 
       { 
+        :micro    => '1m20.51s',
         :short    => '1m 20.51s',
         :default  => '1 min 20.51 secs',
         :long     => '1 minute 20.51 seconds',
@@ -61,6 +63,7 @@ describe ChronicDuration, '.output' do
       },
     (4 * 3600 + 60 + 1) => 
       { 
+        :micro    => '4h1m1s',
         :short    => '4h 1m 1s',
         :default  => '4 hrs 1 min 1 sec',
         :long     => '4 hours 1 minute 1 second',
@@ -68,6 +71,7 @@ describe ChronicDuration, '.output' do
       },
     (2 * 3600 + 20 * 60) => 
       { 
+        :micro    => '2h20m',
         :short    => '2h 20m',
         :default  => '2 hrs 20 mins',
         :long     => '2 hours 20 minutes',
@@ -75,6 +79,7 @@ describe ChronicDuration, '.output' do
       },
     (2 * 3600 + 20 * 60) => 
       { 
+        :micro    => '2h20m',
         :short    => '2h 20m',
         :default  => '2 hrs 20 mins',
         :long     => '2 hours 20 minutes',
@@ -82,6 +87,7 @@ describe ChronicDuration, '.output' do
       },
     (6 * 30 * 24 * 3600 + 24 * 3600) => 
       { 
+        :micro    => '6m1d',
         :short    => '6m 1d',
         :default  => '6 mos 1 day',
         :long     => '6 months 1 day',

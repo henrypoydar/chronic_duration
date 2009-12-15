@@ -43,6 +43,10 @@ module ChronicDuration
     process = nil
     
     case opts[:format]
+    when :micro
+      dividers = { 
+        :years => 'y', :months => 'm', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+      joiner = ''
     when :short
       dividers = { 
         :years => 'y', :months => 'm', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
