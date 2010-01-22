@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
-     "chronic_duration.gemspec",
+     "brianjlandau-chronic_duration.gemspec",
      "lib/chronic_duration.rb",
      "lib/numerizer.rb",
      "spec/chronic_duration_spec.rb"
