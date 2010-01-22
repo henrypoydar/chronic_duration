@@ -38,6 +38,7 @@ Examples of parse-able strings:
 * '6 mos 1 day'
 * '47 yrs 6 mos and 4d'
 * 'two hours and twenty minutes'
+* '3 weeks and 2 days'
     
 == Contributors
 
