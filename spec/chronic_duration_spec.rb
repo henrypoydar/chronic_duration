@@ -16,12 +16,20 @@ describe ChronicDuration, '.parse' do
     '47 yrs 6 mos and 4.5d' => 47 * 31557600 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
     'two hours and twenty minutes' => 2 * 3600 + 20 * 60,
     'four hours and forty minutes' => 4 * 3600 + 40 * 60,
-    'four hours and fourty minutes' => 4 * 3600 + 40 * 60,
-    '3 weeks and 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2
+    'four hours, and fourty minutes' => 4 * 3600 + 40 * 60,
+    '3 weeks and, 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
+    '3 weeks, plus 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
+    '3 weeks with 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2
   }
   
   it "should return nil if the string can't be parsed" do
     ChronicDuration.parse('gobblygoo').should be_nil
+  end
+  
+  it "should raise an exception if the string can't be parsed and @@raise_exceptions is set to true" do
+    ChronicDuration.raise_exceptions = true
+    lambda { ChronicDuration.parse('23 gobblygoos') }.should raise_exception(ChronicDuration::DurationParseError)
+    ChronicDuration.raise_exceptions = false
   end
   
   it "should return a float if seconds are in decimals" do
@@ -31,6 +39,8 @@ describe ChronicDuration, '.parse' do
   it "should return an integer unless the seconds are in decimals" do
     ChronicDuration.parse('12 mins 3 seconds').is_a?(Integer).should be_true
   end
+  
+  
   
   @exemplars.each do |k, v|
     it "should properly parse a duration like #{k}" do

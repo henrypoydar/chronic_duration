@@ -2,6 +2,19 @@ require 'numerizer'
 module ChronicDuration
   extend self
   
+  class DurationParseError < StandardError
+  end
+  
+  @@raise_exceptions = false
+  
+  def self.raise_exceptions
+    !!@@raise_exceptions
+  end
+  
+  def self.raise_exceptions=(value)
+    @@raise_exceptions = !!value
+  end
+  
   # Given a string representation of elapsed time,
   # return an integer (or float, if fractions of a
   # second are input)
@@ -166,7 +179,12 @@ private
         res << word.strip
         next
       end
-      res << mappings[word.strip] if mappings.has_key?(word.strip)
+      stripped_word = word.strip.gsub(/^,/, '').gsub(/,$/, '')
+      if mappings.has_key?(stripped_word)
+        res << mappings[stripped_word]
+      elsif !join_words.include?(stripped_word) and ChronicDuration.raise_exceptions
+        raise DurationParseError, "An invalid word #{word.inspect} was used in the string to be parsed."
+      end
     end
     res.join(' ')
   end
@@ -201,6 +219,10 @@ private
       'yrs'     => 'years',
       'y'       => 'years'
     }
+  end
+  
+  def join_words
+    ['and', 'with', 'plus']
   end
   
   def white_list
