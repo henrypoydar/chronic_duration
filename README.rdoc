@@ -38,6 +38,15 @@ Examples of parse-able strings:
 * '6 mos 1 day'
 * '47 yrs 6 mos and 4d'
 * 'two hours and twenty minutes'
+* '3 weeks and 2 days'
+
+ChronicDuration.raise_exceptions can be set to true to raise exceptions when the string can't be parsed.
+
+    >> ChronicDuration.raise_exceptions = true
+    => true
+    >> ChronicDuration.parse('4 elephants and 3 Astroids')
+    ChronicDuration::DurationParseError: An invalid word "elephants" was used in the string to be parsed.
+
     
 == Contributors
 
