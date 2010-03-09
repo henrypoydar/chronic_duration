@@ -137,7 +137,7 @@ private
   def duration_units_seconds_multiplier(unit)
     return 0 unless duration_units_list.include?(unit)
     case unit
-    when 'years';   31557600 # accounts for leap years
+    when 'years';   31536000 # doesn't accounts for leap years
     when 'months';  3600 * 24 * 30
     when 'weeks';   3600 * 24 * 7
     when 'days';    3600 * 24
@@ -216,6 +216,7 @@ private
       'months'  => 'months',
       'mos'     => 'months',
       'years'   => 'years',
+      'year'    => 'years',
       'yrs'     => 'years',
       'y'       => 'years'
     }
