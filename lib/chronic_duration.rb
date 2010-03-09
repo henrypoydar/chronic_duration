@@ -216,6 +216,7 @@ private
       'months'  => 'months',
       'mos'     => 'months',
       'years'   => 'years',
+      'year'    => 'years',
       'yrs'     => 'years',
       'y'       => 'years'
     }
