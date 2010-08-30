@@ -50,7 +50,7 @@ ChronicDuration.raise_exceptions can be set to true to raise exceptions when the
     
 == Contributors
 
-brianjlandau, jduff, olauzon
+brianjlandau, jduff, olauzon, roboman
     
 == TODO
 
