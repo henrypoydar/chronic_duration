@@ -215,6 +215,7 @@ private
       'w'       => 'weeks',
       'months'  => 'months',
       'mos'     => 'months',
+      'month'   => 'months',
       'years'   => 'years',
       'year'    => 'years',
       'yrs'     => 'years',
