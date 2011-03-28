@@ -43,7 +43,6 @@ describe ChronicDuration, '.parse' do
     ChronicDuration.parse('12 mins 3 seconds').is_a?(Integer).should be_true
   end
   
-  
   @exemplars.each do |k, v|
     it "should properly parse a duration like #{k}" do
       ChronicDuration.parse(k).should == v
@@ -59,6 +58,14 @@ describe ChronicDuration, '.output' do
   end
   
   @exemplars = { 
+    #(0) => 
+      #{
+        #:micro    => '0s',
+        #:short    => '0s',
+        #:default  => '0 secs',
+        #:long     => '0 seconds',
+        #:chrono   => '0'
+      #},
     (60 + 20) => 
       { 
         :micro    => '1m20s',

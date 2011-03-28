@@ -31,6 +31,8 @@ module ChronicDuration
     
     years = months = days = hours = minutes = 0
     
+    decimal_places = seconds.to_s.split('.').last.length if seconds.is_a?(Float)
+
     if seconds >= 60
       minutes = (seconds / 60).to_i 
       seconds = seconds % 60
@@ -86,9 +88,11 @@ module ChronicDuration
     
     result = []
     [:years, :months, :days, :hours, :minutes, :seconds].each do |t|
-      result << humanize_time_unit( eval(t.to_s), dividers[t], dividers[:pluralize], dividers[:keep_zero] )
+      num = eval(t.to_s)
+      num = ("%.#{decimal_places.to_s.split('.').last.length}f" % num) if num.is_a?(Float) && t == :seconds 
+      result << humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
     end
-    
+
     result = result.join(joiner).squeeze(' ').strip
     
     if process
