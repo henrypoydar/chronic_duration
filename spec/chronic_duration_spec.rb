@@ -44,7 +44,6 @@ describe ChronicDuration, '.parse' do
   end
   
   
-  
   @exemplars.each do |k, v|
     it "should properly parse a duration like #{k}" do
       ChronicDuration.parse(k).should == v
