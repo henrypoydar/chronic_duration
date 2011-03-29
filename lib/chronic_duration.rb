@@ -89,7 +89,7 @@ module ChronicDuration
     result = []
     [:years, :months, :days, :hours, :minutes, :seconds].each do |t|
       num = eval(t.to_s)
-      num = ("%.#{decimal_places.to_s.split('.').last.length}f" % num) if num.is_a?(Float) && t == :seconds 
+      num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds 
       result << humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
     end
 
