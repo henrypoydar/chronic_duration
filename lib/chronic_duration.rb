@@ -1,4 +1,4 @@
-require 'numerizer'
+require 'numerizer' unless defined?(Numerizer)
 module ChronicDuration
   extend self
   
