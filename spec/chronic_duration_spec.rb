@@ -43,6 +43,10 @@ describe ChronicDuration, '.parse' do
     ChronicDuration.parse('12 mins 3 seconds').is_a?(Integer).should be_true
   end
   
+  it "should be able to parse minutes by default" do
+    ChronicDuration.parse('5', :default_unit => "minutes").should == 300
+  end
+  
   @exemplars.each do |k, v|
     it "should properly parse a duration like #{k}" do
       ChronicDuration.parse(k).should == v

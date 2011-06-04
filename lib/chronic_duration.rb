@@ -18,8 +18,8 @@ module ChronicDuration
   # Given a string representation of elapsed time,
   # return an integer (or float, if fractions of a
   # second are input)
-  def parse(string)
-    result = calculate_from_words(cleanup(string))
+  def parse(string, opts = {})
+    result = calculate_from_words(cleanup(string), opts)
     result == 0 ? nil : result
   end  
   
@@ -113,12 +113,12 @@ private
     res
   end
   
-  def calculate_from_words(string)
+  def calculate_from_words(string, opts)
     val = 0
     words = string.split(' ')
     words.each_with_index do |v, k|
       if v =~ float_matcher
-        val += (convert_to_number(v) * duration_units_seconds_multiplier(words[k + 1] || 'seconds'))
+        val += (convert_to_number(v) * duration_units_seconds_multiplier(words[k + 1] || (opts[:default_unit] || 'seconds')))
       end
     end
     val
