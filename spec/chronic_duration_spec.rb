@@ -127,20 +127,18 @@ describe ChronicDuration, '.output' do
         :chrono   => '6:01:00:00:00' # Yuck. FIXME
       }
   }
-  
-  @exemplars.each do |k, v|
-    v.each do |key, val|
-      it "should properly output a duration of #{k} seconds as #{val} using the #{key.to_s} format option" do
-        ChronicDuration.output(k, :format => key).should == val
+
+  @exemplars.each do |number_seconds, v|
+    v.each do |format, expected_output|
+      it "should properly output a duration of #{number_seconds} seconds as #{expected_output} using the #{format.to_s} format option" do
+        ChronicDuration.output(number_seconds, :format => format).should == expected_output
       end
     end
   end
-  
+
   it "should use the default format when the format is not specified" do
     ChronicDuration.output(2 * 3600 + 20 * 60).should == '2 hrs 20 mins'
   end
-  
-  
 end
 
 
