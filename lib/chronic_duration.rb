@@ -22,41 +22,17 @@ module ChronicDuration
     result = calculate_from_words(cleanup(string), opts)
     result == 0 ? nil : result
   end  
-  
+
   # Given an integer and an optional format,
   # returns a formatted string representing elapsed time
   def output(seconds, opts = {})
-    
-    opts[:format] ||= :default
-    
-    years = months = days = hours = minutes = 0
-    
-    decimal_places = seconds.to_s.split('.').last.length if seconds.is_a?(Float)
 
-    if seconds >= 60
-      minutes = (seconds / 60).to_i 
-      seconds = seconds % 60
-      if minutes >= 60
-        hours = (minutes / 60).to_i
-        minutes = (minutes % 60).to_i
-        if hours >= 24
-          days = (hours / 24).to_i
-          hours = (hours % 24).to_i
-          if days >= 30
-            months = (days / 30).to_i
-            days = (days % 30).to_i
-            if months >= 12
-              years = (months / 12).to_i
-              months = (months % 12).to_i
-            end
-          end
-        end
-      end
-    end
-    
+    opts[:format] ||= :default
+    duration = Duration.new seconds
+
     joiner = ' '
     process = nil
-    
+
     case opts[:format]
     when :micro
       dividers = { 
@@ -85,11 +61,11 @@ module ChronicDuration
       end
       joiner = ''
     end
-    
+
     result = []
     [:years, :months, :days, :hours, :minutes, :seconds].each do |t|
-      num = eval(t.to_s)
-      num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds 
+      num = duration.send t
+      num = ("%.#{decimal_places seconds }f" % num) if num.is_a?(Float) && t == :seconds 
       result << humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
     end
 
@@ -102,7 +78,47 @@ module ChronicDuration
     result.length == 0 ? nil : result
 
   end
-  
+
+  def decimal_places number
+    number.to_s.split('.').last.length if number.is_a? Float
+  end
+
+  class Duration
+    attr_accessor :seconds, :minutes, :hours, :days, :months, :years
+
+    def initialize seconds
+      @years = @months = @days = @hours = @minutes = 0
+
+      compute_measures seconds
+    end
+
+    private
+    def compute_measures seconds
+      quotient = seconds
+      remainder = 0
+
+      unit_of_measures.each do |uom|
+        break unless quotient > uom[:amount]
+        remainder = quotient % uom[:amount]
+        quotient /= uom[:amount]
+        assign uom[:name], remainder
+        assign uom[:parent], quotient.to_i
+      end
+    end
+
+    def unit_of_measures
+      [ { :name => :seconds=, :parent => :minutes=, :amount => 60 },
+        { :name => :minutes=, :parent => :hours=, :amount => 60 },
+        { :name => :hours=, :parent => :days=, :amount => 24 },
+        { :name => :days=, :parent => :months=, :amount => 30 },
+        { :name => :months=, :parent => :years=, :amount => 12 }
+      ]
+    end
+
+    def assign setter, value
+      self.send setter, value
+    end
+  end
 private
   
   def humanize_time_unit(number, unit, pluralize, keep_zero)
