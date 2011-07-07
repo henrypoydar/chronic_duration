@@ -120,6 +120,7 @@ module ChronicDuration
     end
 
     def assign setter, value
+      value = value.to_i unless setter == :seconds=
       self.send setter, value
     end
   end

@@ -126,6 +126,14 @@ describe ChronicDuration, '.output' do
         :default  => '6 mos 1 day',
         :long     => '6 months 1 day',
         :chrono   => '6:01:00:00:00' # Yuck. FIXME
+      },
+      (21 * (60*60) + 24 * 60 + 41.4013528824) =>
+      {
+        :micro    => '21h24m41.4013528824s',
+        :short    => '21h 24m 41.4013528824s',
+        :default  => '21 hrs 24 mins 41.4013528824 secs',
+        :long     => '21 hours 24 minutes 41.4013528824 seconds',
+        :chrono   => '21:24:41.4013528824'
       }
     }
   end
