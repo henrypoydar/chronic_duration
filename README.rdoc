@@ -23,10 +23,10 @@ The reverse can also be accomplished with the output method.  So pass in seconds
     => 4 minutes 30 seconds
     >> ChronicDuration.output(270, :format => :chrono)
     => 4:30
-    >> ChronicDuration.output(5306520, :format => :long, :units => [:days, :hours, :minutes])
-    => 61 days 10 hours 2 minutes
-    >> ChronicDuration.output(5306400, :format => :long, :units => [:days, :hours, :minutes], :keep_zero => true)
-    => 61 days 10 hours 0 minutes
+    >> ChronicDuration.output(5306520, :units => [:days, :hours, :minutes])
+    => 61 days 10 hrs 2 mins
+    >> ChronicDuration.output(5306400, :keep_zero => true)
+    => 0 yrs 2 mos 1 day 10 hrs 0 mins 0 secs
     >> ChronicDuration.output(5306400, :verbose => true)
     => <span class="number-mo">2</span><span class="unit-mo"> mos</span> <span class="number-day">1</span><span class="unit-day"> day</span> <span class="number-hr">10</span><span class="unit-hr"> hrs</span>
 
