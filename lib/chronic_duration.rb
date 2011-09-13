@@ -27,7 +27,16 @@ module ChronicDuration
   # returns a formatted string representing elapsed time
   def output(seconds, opts = {})
     
+    # default unit values (useful for later lookup)
+    unit_values = [:years, :months, :days, :hours, :minutes, :seconds]
+    
     opts[:format] ||= :default
+    
+    # allow customization on the units to display and whether 
+    # to show zero value units
+    opts[:units] ||= unit_values
+    opts[:keep_zero] ||= false
+    opts[:verbose] ||= false
     
     years = months = days = hours = minutes = 0
     
@@ -75,7 +84,7 @@ module ChronicDuration
         :pluralize => true }
     when :chrono
       dividers = {
-        :years => ':', :months => ':', :days => ':', :hours => ':', :minutes => ':', :seconds => ':', :keep_zero => true }
+        :years => ':', :months => ':', :days => ':', :hours => ':', :minutes => ':', :seconds => ':' }
       process = lambda do |str|
         # Pad zeros
         # Get rid of lead off times if they are zero
@@ -85,12 +94,31 @@ module ChronicDuration
       end
       joiner = ''
     end
-    
+
     result = []
-    [:years, :months, :days, :hours, :minutes, :seconds].each do |t|
+
+    opts[:units].each_with_index do |t,i|
       num = eval(t.to_s)
+
+      # Determine whether we're showing the first unit. If so loop up the tree
+      # to add back the greater units.
+      # TODO : needs refactoring
+      if i == 0
+        position = unit_values.index t
+        multiplier = duration_units_seconds_multiplier(t.to_s)
+        if position > 0
+          num = num.to_i
+          unit_values[0..(position-1)].each do |u|
+            if duration_units_seconds_multiplier(u.to_s) > multiplier
+              num += eval(u.to_s).to_i * (duration_units_seconds_multiplier(u.to_s)/multiplier).to_i
+            end
+          end
+        end
+      end
+
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds 
-      result << humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
+
+      result << humanize_time_unit( num, dividers[t], dividers[:pluralize], opts[:keep_zero], opts[:verbose] )
     end
 
     result = result.join(joiner).squeeze(' ').strip
@@ -105,11 +133,16 @@ module ChronicDuration
   
 private
   
-  def humanize_time_unit(number, unit, pluralize, keep_zero)
+  def humanize_time_unit(number, unit, pluralize, keep_zero, verbose)
     return '' if number == 0 && !keep_zero
-    res = "#{number}#{unit}"
-    # A poor man's pluralizer
-    res << 's' if !(number == 1) && pluralize
+    if verbose
+      res = "<span class=\"number-#{unit.strip}\">#{number}</span>"
+      res << "<span class=\"unit-#{unit.strip}\">#{unit}#{'s' if !(number == 1) && pluralize}</span>"
+    else
+      res = "#{number}#{unit}"
+      # A poor man's pluralizer
+      res << 's' if !(number == 1) && pluralize
+    end
     res
   end
   
