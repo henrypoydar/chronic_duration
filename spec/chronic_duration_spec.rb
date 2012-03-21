@@ -60,17 +60,18 @@ describe ChronicDuration, '.output' do
   it "should return nil if the input can't be parsed" do
     ChronicDuration.parse('gobblygoo').should be_nil
   end
-  
-  @exemplars = { 
-    #(0) => 
+
+  def self.exemplars
+    { 
+      #(0) => 
       #{
-        #:micro    => '0s',
-        #:short    => '0s',
-        #:default  => '0 secs',
-        #:long     => '0 seconds',
-        #:chrono   => '0'
+      #:micro    => '0s',
+      #:short    => '0s',
+      #:default  => '0 secs',
+      #:long     => '0 seconds',
+      #:chrono   => '0'
       #},
-    (60 + 20) => 
+      (60 + 20) => 
       { 
         :micro    => '1m20s',
         :short    => '1m 20s',
@@ -78,7 +79,7 @@ describe ChronicDuration, '.output' do
         :long     => '1 minute 20 seconds',
         :chrono   => '1:20'
       },
-    (60 + 20.51) => 
+      (60 + 20.51) => 
       { 
         :micro    => '1m20.51s',
         :short    => '1m 20.51s',
@@ -86,7 +87,7 @@ describe ChronicDuration, '.output' do
         :long     => '1 minute 20.51 seconds',
         :chrono   => '1:20.51'
       },
-    (60 + 20.51928) => 
+      (60 + 20.51928) => 
       { 
         :micro    => '1m20.51928s',
         :short    => '1m 20.51928s',
@@ -94,7 +95,7 @@ describe ChronicDuration, '.output' do
         :long     => '1 minute 20.51928 seconds',
         :chrono   => '1:20.51928'
       },
-    (4 * 3600 + 60 + 1) => 
+      (4 * 3600 + 60 + 1) => 
       { 
         :micro    => '4h1m1s',
         :short    => '4h 1m 1s',
@@ -102,7 +103,7 @@ describe ChronicDuration, '.output' do
         :long     => '4 hours 1 minute 1 second',
         :chrono   => '4:01:01'
       },
-    (2 * 3600 + 20 * 60) => 
+      (2 * 3600 + 20 * 60) => 
       { 
         :micro    => '2h20m',
         :short    => '2h 20m',
@@ -110,7 +111,7 @@ describe ChronicDuration, '.output' do
         :long     => '2 hours 20 minutes',
         :chrono   => '2:20'
       },
-    (2 * 3600 + 20 * 60) => 
+      (2 * 3600 + 20 * 60) => 
       { 
         :micro    => '2h20m',
         :short    => '2h 20m',
@@ -118,29 +119,52 @@ describe ChronicDuration, '.output' do
         :long     => '2 hours 20 minutes',
         :chrono   => '2:20:00'
       },
-    (6 * 30 * 24 * 3600 + 24 * 3600) => 
+      (6 * 30 * 24 * 3600 + 24 * 3600) => 
       { 
         :micro    => '6m1d',
         :short    => '6m 1d',
         :default  => '6 mos 1 day',
         :long     => '6 months 1 day',
         :chrono   => '6:01:00:00:00' # Yuck. FIXME
+      },
+      (21 * (60*60) + 24 * 60 + 41.4013528824) =>
+      {
+        :micro    => '21h24m41.4013528824s',
+        :short    => '21h 24m 41.4013528824s',
+        :default  => '21 hrs 24 mins 41.4013528824 secs',
+        :long     => '21 hours 24 minutes 41.4013528824 seconds',
+        :chrono   => '21:24:41.4013528824'
       }
-  }
-  
-  @exemplars.each do |k, v|
-    v.each do |key, val|
-      it "should properly output a duration of #{k} seconds as #{val} using the #{key.to_s} format option" do
-        ChronicDuration.output(k, :format => key).should == val
+    }
+  end
+
+  exemplars.each do |number_seconds, test_cases|
+    test_cases.each do |format, expected_output|
+      it "should properly output a duration of #{number_seconds} seconds as #{expected_output} using the #{format.to_s} format option" do
+        ChronicDuration.output(number_seconds, :format => format).should == expected_output
       end
     end
   end
-  
+
+  context "using :hide_seconds" do
+    it "should return nil if less than 60 seconds are passed" do
+      ChronicDuration.output(59, :hide_seconds => true).should be_nil
+    end
+
+    exemplars.each do |number_seconds, test_cases|
+      test_cases.each do |format, expected_output|
+        regex = (format == :chrono) ? /:\d\d\.?\d*$/ : /\ ?\d+\.?\d*\ ?(seconds*|secs*|s)/
+        expected_output_without_secs = expected_output.gsub(regex, "")
+        it "should properly output a duration of #{number_seconds} seconds as #{expected_output_without_secs} using the #{format.to_s} format option" do
+          ChronicDuration.output(number_seconds, :format => format, :hide_seconds => true).should == expected_output_without_secs
+        end
+      end
+    end
+  end
+
   it "should use the default format when the format is not specified" do
     ChronicDuration.output(2 * 3600 + 20 * 60).should == '2 hrs 20 mins'
   end
-  
-  
 end
 
 
