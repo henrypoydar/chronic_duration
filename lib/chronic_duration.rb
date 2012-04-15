@@ -29,7 +29,7 @@ module ChronicDuration
     
     opts[:format] ||= :default
     
-    years = months = days = hours = minutes = 0
+    years = months = weeks = days = hours = minutes = 0
     
     decimal_places = seconds.to_s.split('.').last.length if seconds.is_a?(Float)
 
@@ -42,12 +42,27 @@ module ChronicDuration
         if hours >= 24
           days = (hours / 24).to_i
           hours = (hours % 24).to_i
-          if days >= 30
-            months = (days / 30).to_i
-            days = (days % 30).to_i
-            if months >= 12
-              years = (months / 12).to_i
-              months = (months % 12).to_i
+          if opts[:weeks]
+            if days >= 7
+              weeks = (days / 7).to_i
+              days = (days % 7).to_i
+              if weeks >= 4
+                months = (weeks / 4).to_i
+                weeks = (weeks % 7).to_i
+                if months >= 12
+                  years = (months / 12).to_i
+                  months = (months % 12).to_i
+                end 
+              end
+            end
+          else  
+            if days >= 30
+              months = (days / 30).to_i
+              days = (days % 30).to_i
+              if months >= 12
+                years = (months / 12).to_i
+                months = (months % 12).to_i
+              end
             end
           end
         end
@@ -60,22 +75,22 @@ module ChronicDuration
     case opts[:format]
     when :micro
       dividers = { 
-        :years => 'y', :months => 'm', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+        :years => 'y', :months => 'm', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
       joiner = ''
     when :short
       dividers = { 
-        :years => 'y', :months => 'm', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+        :years => 'y', :months => 'm', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
     when :default 
       dividers = {
-        :years => ' yr', :months => ' mo', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
+        :years => ' yr', :months => ' mo', :weeks => ' wk', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
         :pluralize => true }
     when :long 
       dividers = {
-        :years => ' year', :months => ' month', :days => ' day', :hours => ' hour', :minutes => ' minute', :seconds => ' second', 
+        :years => ' year', :months => ' month', :weeks => ' week', :days => ' day', :hours => ' hour', :minutes => ' minute', :seconds => ' second', 
         :pluralize => true }
     when :chrono
       dividers = {
-        :years => ':', :months => ':', :days => ':', :hours => ':', :minutes => ':', :seconds => ':', :keep_zero => true }
+        :years => ':', :months => ':', :weeks => ':', :days => ':', :hours => ':', :minutes => ':', :seconds => ':', :keep_zero => true }
       process = lambda do |str|
         # Pad zeros
         # Get rid of lead off times if they are zero
@@ -87,7 +102,8 @@ module ChronicDuration
     end
     
     result = []
-    [:years, :months, :days, :hours, :minutes, :seconds].each do |t|
+    [:years, :months, :weeks, :days, :hours, :minutes, :seconds].each do |t|
+      next if t == :weeks && !opts[:weeks]
       num = eval(t.to_s)
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds 
       result << humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )

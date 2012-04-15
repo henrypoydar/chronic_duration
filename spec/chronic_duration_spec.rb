@@ -136,6 +136,10 @@ describe ChronicDuration, '.output' do
     end
   end
   
+  it "should show weeks when needed" do
+    ChronicDuration.output(15*24*60*60, :weeks => true).should =~ /.*wk.*/
+  end
+  
   it "should use the default format when the format is not specified" do
     ChronicDuration.output(2 * 3600 + 20 * 60).should == '2 hrs 20 mins'
   end
