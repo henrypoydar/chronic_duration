@@ -23,6 +23,10 @@ The reverse can also be accomplished with the output method.  So pass in seconds
     => 4 minutes 30 seconds
     >> ChronicDuration.output(270, :format => :chrono)
     => 4:30
+    >> ChronicDuration.output(1296000, :weeks => true)
+    => 2 wks 1 day
+    >> ChronicDuration.output(1296000)
+    => 15 days
     
 Nil is returned if the string can't be parsed
 
