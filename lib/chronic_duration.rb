@@ -20,7 +20,7 @@ module ChronicDuration
   # second are input)
   def parse(string, opts = {})
     result = calculate_from_words(cleanup(string), opts)
-    result == 0 ? nil : result
+    (!opts[:keep_zero] and result == 0) ? nil : result
   end  
   
   # Given an integer and an optional format,
@@ -28,6 +28,7 @@ module ChronicDuration
   def output(seconds, opts = {})
     
     opts[:format] ||= :default
+    opts[:keep_zero] ||= false
     
     years = months = days = hours = minutes = 0
     
@@ -81,7 +82,8 @@ module ChronicDuration
         # Get rid of lead off times if they are zero
         # Get rid of lead off zero
         # Get rid of trailing :
-        str.gsub(/\b\d\b/) { |d| ("%02d" % d) }.gsub(/^(00:)+/, '').gsub(/^0/, '').gsub(/:$/, '')
+        str = str.gsub(/\b\d\b/) { |d| ("%02d" % d) }.gsub(/^(00:)+/, '').gsub(/^0/, '').gsub(/:$/, '')
+        (str.empty? and opts[:keep_zero]) ? "0" : str
       end
       joiner = ''
     end
@@ -90,7 +92,9 @@ module ChronicDuration
     [:years, :months, :days, :hours, :minutes, :seconds].each do |t|
       num = eval(t.to_s)
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds 
-      result << humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
+      keep_zero = dividers[:keep_zero]
+      keep_zero ||= opts[:keep_zero] if t == :seconds
+      result << humanize_time_unit( num, dividers[t], dividers[:pluralize], keep_zero )
     end
 
     result = result.join(joiner).squeeze(' ').strip
