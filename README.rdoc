@@ -15,6 +15,10 @@ The reverse can also be accomplished with the output method.  So pass in seconds
     => true
     >> ChronicDuration.parse('4 minutes and 30 seconds')
     => 270
+    >> ChronicDuration.parse('0')
+    => nil
+    >> ChronicDuration.parse('0', :keep_zero => true)
+    => 0
     >> ChronicDuration.output(270)
     => 4 mins 30 secs
     >> ChronicDuration.output(270, :format => :short)
@@ -23,6 +27,10 @@ The reverse can also be accomplished with the output method.  So pass in seconds
     => 4 minutes 30 seconds
     >> ChronicDuration.output(270, :format => :chrono)
     => 4:30
+    >> ChronicDuration.output(0, :format => :short)
+    => nil
+    >> ChronicDuration.output(0, :format => :short, :keep_zero => true)
+    => 0s
     
 Nil is returned if the string can't be parsed
 
