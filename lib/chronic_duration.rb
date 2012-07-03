@@ -190,6 +190,8 @@ private
         raise DurationParseError, "An invalid word #{word.inspect} was used in the string to be parsed."
       end
     end
+    # add '1' at front if string starts with something recognizable but not with a number, like 'day' or 'minute 30sec' 
+    res.unshift(1) if res.length > 0 && mappings[res[0]]  
     res.join(' ')
   end
   
