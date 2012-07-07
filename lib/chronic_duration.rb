@@ -48,7 +48,7 @@ module ChronicDuration
               days = (days % 7).to_i
               if weeks >= 4
                 months = (weeks / 4).to_i
-                weeks = (weeks % 7).to_i
+                weeks = (weeks % 4).to_i
                 if months >= 12
                   years = (months / 12).to_i
                   months = (months % 12).to_i
