@@ -1,40 +1,40 @@
 require 'numerizer' unless defined?(Numerizer)
 module ChronicDuration
   extend self
-  
+
   class DurationParseError < StandardError
   end
-  
+
   @@raise_exceptions = false
-  
+
   def self.raise_exceptions
     !!@@raise_exceptions
   end
-  
+
   def self.raise_exceptions=(value)
     @@raise_exceptions = !!value
   end
-  
+
   # Given a string representation of elapsed time,
   # return an integer (or float, if fractions of a
   # second are input)
   def parse(string, opts = {})
     result = calculate_from_words(cleanup(string), opts)
     result == 0 ? nil : result
-  end  
-  
+  end
+
   # Given an integer and an optional format,
   # returns a formatted string representing elapsed time
   def output(seconds, opts = {})
-    
+
     opts[:format] ||= :default
-    
+
     years = months = weeks = days = hours = minutes = 0
-    
+
     decimal_places = seconds.to_s.split('.').last.length if seconds.is_a?(Float)
 
     if seconds >= 60
-      minutes = (seconds / 60).to_i 
+      minutes = (seconds / 60).to_i
       seconds = seconds % 60
       if minutes >= 60
         hours = (minutes / 60).to_i
@@ -49,44 +49,40 @@ module ChronicDuration
               if weeks >= 4
                 months = (weeks / 4).to_i
                 weeks = (weeks % 4).to_i
-                if months >= 12
-                  years = (months / 12).to_i
-                  months = (months % 12).to_i
-                end 
               end
             end
-          else  
+          else
             if days >= 30
               months = (days / 30).to_i
               days = (days % 30).to_i
-              if months >= 12
-                years = (months / 12).to_i
-                months = (months % 12).to_i
-              end
             end
+          end
+          if months >= 12
+            years = (months / 12).to_i
+            months = (months % 12).to_i
           end
         end
       end
     end
-    
+
     joiner = ' '
     process = nil
-    
+
     case opts[:format]
     when :micro
-      dividers = { 
+      dividers = {
         :years => 'y', :months => 'm', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
       joiner = ''
     when :short
-      dividers = { 
+      dividers = {
         :years => 'y', :months => 'm', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
-    when :default 
+    when :default
       dividers = {
         :years => ' yr', :months => ' mo', :weeks => ' wk', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
         :pluralize => true }
-    when :long 
+    when :long
       dividers = {
-        :years => ' year', :months => ' month', :weeks => ' week', :days => ' day', :hours => ' hour', :minutes => ' minute', :seconds => ' second', 
+        :years => ' year', :months => ' month', :weeks => ' week', :days => ' day', :hours => ' hour', :minutes => ' minute', :seconds => ' second',
         :pluralize => true }
     when :chrono
       dividers = {
@@ -100,35 +96,36 @@ module ChronicDuration
       end
       joiner = ''
     end
-    
-    result = []
-    [:years, :months, :weeks, :days, :hours, :minutes, :seconds].each do |t|
+
+    result = [:years, :months, :weeks, :days, :hours, :minutes, :seconds].map do |t|
       next if t == :weeks && !opts[:weeks]
       num = eval(t.to_s)
-      num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds 
-      result << humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
-    end
+      num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
+      humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
+    end.compact!
 
-    result = result.join(joiner).squeeze(' ').strip
-    
+    result = result[0...opts[:units]] if opts[:units]
+
+    result = result.join(joiner)
+
     if process
       result = process.call(result)
     end
-    
+
     result.length == 0 ? nil : result
 
   end
-  
+
 private
-  
+
   def humanize_time_unit(number, unit, pluralize, keep_zero)
-    return '' if number == 0 && !keep_zero
+    return nil if number == 0 && !keep_zero
     res = "#{number}#{unit}"
     # A poor man's pluralizer
     res << 's' if !(number == 1) && pluralize
     res
   end
-  
+
   def calculate_from_words(string, opts)
     val = 0
     words = string.split(' ')
@@ -139,18 +136,18 @@ private
     end
     val
   end
-  
+
   def cleanup(string)
     res = string.downcase
     res = filter_by_type(Numerizer.numerize(res))
     res = res.gsub(float_matcher) {|n| " #{n} "}.squeeze(' ').strip
     res = filter_through_white_list(res)
   end
-  
+
   def convert_to_number(string)
     string.to_f % 1 > 0 ? string.to_f : string.to_i
   end
-  
+
   def duration_units_list
     %w(seconds minutes hours days weeks months years)
   end
@@ -166,11 +163,11 @@ private
     when 'seconds'; 1
     end
   end
-  
+
   def error_message
     'Sorry, that duration could not be parsed'
   end
-  
+
   # Parse 3:41:59 and return 3 hours 41 minutes 59 seconds
   def filter_by_type(string)
     if string.gsub(' ', '') =~ /#{float_matcher}(:#{float_matcher})+/
@@ -185,11 +182,11 @@ private
     end
     res
   end
-  
+
   def float_matcher
     /[0-9]*\.?[0-9]+/
   end
-  
+
   # Get rid of unknown words and map found
   # words to defined time units
   def filter_through_white_list(string)
@@ -208,9 +205,9 @@ private
     end
     res.join(' ')
   end
-  
+
   def mappings
-    { 
+    {
       'seconds' => 'seconds',
       'second'  => 'seconds',
       'secs'    => 'seconds',
@@ -242,13 +239,13 @@ private
       'y'       => 'years'
     }
   end
-  
+
   def join_words
     ['and', 'with', 'plus']
   end
-  
+
   def white_list
     self.mappings.map {|k, v| k}
   end
-  
+
 end
