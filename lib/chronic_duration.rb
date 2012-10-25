@@ -60,6 +60,7 @@ module ChronicDuration
           if months >= 12
             years = (months / 12).to_i
             months = (months % 12).to_i
+            days = days - (5 * years)
           end
         end
       end
@@ -71,11 +72,11 @@ module ChronicDuration
     case opts[:format]
     when :micro
       dividers = {
-        :years => 'y', :months => 'm', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+        :years => 'y', :months => 'mo', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
       joiner = ''
     when :short
       dividers = {
-        :years => 'y', :months => 'm', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+        :years => 'y', :months => 'mo', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
     when :default
       dividers = {
         :years => ' yr', :months => ' mo', :weeks => ' wk', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
@@ -170,11 +171,12 @@ private
 
   # Parse 3:41:59 and return 3 hours 41 minutes 59 seconds
   def filter_by_type(string)
+    chrono_units_list = duration_units_list.reject {|v| v == "weeks"}
     if string.gsub(' ', '') =~ /#{float_matcher}(:#{float_matcher})+/
       res = []
       string.gsub(' ', '').split(':').reverse.each_with_index do |v,k|
-        return unless duration_units_list[k]
-        res << "#{v} #{duration_units_list[k]}"
+        return unless chrono_units_list[k]
+        res << "#{v} #{chrono_units_list[k]}"
       end
       res = res.reverse.join(' ')
     else
@@ -231,11 +233,13 @@ private
       'week'    => 'weeks',
       'w'       => 'weeks',
       'months'  => 'months',
+      'mo'      => 'months',
       'mos'     => 'months',
       'month'   => 'months',
       'years'   => 'years',
       'year'    => 'years',
       'yrs'     => 'years',
+      'yr'      => 'years',
       'y'       => 'years'
     }
   end

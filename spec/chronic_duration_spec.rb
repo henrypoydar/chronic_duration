@@ -120,12 +120,28 @@ describe ChronicDuration, '.output' do
       },
     (6 * 30 * 24 * 3600 + 24 * 3600) =>
       {
-        :micro    => '6m1d',
-        :short    => '6m 1d',
+        :micro    => '6mo1d',
+        :short    => '6mo 1d',
         :default  => '6 mos 1 day',
         :long     => '6 months 1 day',
         :chrono   => '6:01:00:00:00' # Yuck. FIXME
-      }
+      },
+    (365 * 24 * 3600 + 24 * 3600 ) =>
+      {
+        :micro    => '1y1d',
+        :short    => '1y 1d',
+        :default  => '1 yr 1 day',
+        :long     => '1 year 1 day',
+        :chrono   => '1:00:01:00:00:00'
+      },
+    (3  * 365 * 24 * 3600 + 24 * 3600 ) =>
+      {
+        :micro    => '3y1d',
+        :short    => '3y 1d',
+        :default  => '3 yrs 1 day',
+        :long     => '3 years 1 day',
+        :chrono   => '3:00:01:00:00:00'
+      },
   }
 
   @exemplars.each do |k, v|
@@ -149,7 +165,13 @@ describe ChronicDuration, '.output' do
     ChronicDuration.output(2 * 3600 + 20 * 60).should == '2 hrs 20 mins'
   end
 
-
+  @exemplars.each do |seconds,format_spec|
+    format_spec.each do |format,_|
+      it "it should properly output a duration for #{seconds} that parses back to the same thing when using the #{format.to_s} format" do
+        ChronicDuration.parse(ChronicDuration.output(seconds, :format => format)).should == seconds
+      end
+    end
+  end
 end
 
 
