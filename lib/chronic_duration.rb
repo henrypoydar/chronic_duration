@@ -58,9 +58,10 @@ module ChronicDuration
             end
           end
           if months >= 12
-            years = (months / 12).to_i
-            months = (months % 12).to_i
-            days = days - (5 * years)
+            days = days + (months * 30)
+            years = (days / 365).to_i
+            months = ((days % 365)/30).to_i
+            days = ((days % 365)%30)
           end
         end
       end
