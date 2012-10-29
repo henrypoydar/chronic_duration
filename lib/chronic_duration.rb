@@ -248,9 +248,4 @@ private
   def join_words
     ['and', 'with', 'plus']
   end
-
-  def white_list
-    self.mappings.map {|k, v| k}
-  end
-
 end

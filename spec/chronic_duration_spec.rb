@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 require 'chronic_duration'
 
 describe ChronicDuration, '.parse' do
@@ -163,7 +165,7 @@ describe ChronicDuration, '.output' do
   end
 
   it "should show weeks when needed" do
-    ChronicDuration.output(15*24*60*60, :weeks => true).should =~ /.*wk.*/
+    ChronicDuration.output(45*24*60*60, :weeks => true).should =~ /.*wk.*/
   end
 
   it "should show the specified number of units if provided" do
