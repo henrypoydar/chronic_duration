@@ -14,9 +14,9 @@ describe ChronicDuration, '.parse' do
     '2 hrs 20 min'          => 2 * 3600 + 20 * 60,
     '2h20min'               => 2 * 3600 + 20 * 60,
     '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,
-    '1 year 6 mos 1 day'    => 1 * 31536000 + 6 * 30 * 24 * 3600 + 24 * 3600,
+    '1 year 6 mos 1 day'    => 1 * 31557600 + 6 * 30 * 24 * 3600 + 24 * 3600,
     '2.5 hrs'               => 2.5 * 3600,
-    '47 yrs 6 mos and 4.5d' => 47 * 31536000 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
+    '47 yrs 6 mos and 4.5d' => 47 * 31557600 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
     'two hours and twenty minutes' => 2 * 3600 + 20 * 60,
     'four hours and forty minutes' => 4 * 3600 + 40 * 60,
     'four hours, and fourty minutes' => 4 * 3600 + 40 * 60,
@@ -26,7 +26,7 @@ describe ChronicDuration, '.parse' do
     '1 month'               => 3600 * 24 * 30,
     '2 months'              => 3600 * 24 * 30 * 2,
     '18 months'             => 3600 * 24 * 30 * 18,
-    '1 year 6 months'       => 3600 * 24 * (365 + 6 * 30)
+    '1 year 6 months'       => 3600 * 24 * (365.25 + 6 * 30)
   }
 
   it "should return nil if the string can't be parsed" do
@@ -130,7 +130,7 @@ describe ChronicDuration, '.output' do
         :long     => '6 months 1 day',
         :chrono   => '6:01:00:00:00' # Yuck. FIXME
       },
-    (365 * 24 * 3600 + 24 * 3600 ) =>
+    (31644000) =>
       {
         :micro    => '1y1d',
         :short    => '1y 1d',
@@ -138,7 +138,7 @@ describe ChronicDuration, '.output' do
         :long     => '1 year 1 day',
         :chrono   => '1:00:01:00:00:00'
       },
-    (3  * 365 * 24 * 3600 + 24 * 3600 ) =>
+    (94759200) =>
       {
         :micro    => '3y1d',
         :short    => '3y 1d',
@@ -148,11 +148,11 @@ describe ChronicDuration, '.output' do
       },
     (3600 * 24 * 30 * 18) =>
       {
-        :micro    => '1y5mo25d',
-        :short    => '1y 5mo 25d',
-        :default  => '1 yr 5 mos 25 days',
-        :long     => '1 year 5 months 25 days',
-        :chrono   => '1:05:25:00:00:00'
+        :micro    => '18mo',
+        :short    => '18mo',
+        :default  => '18 mos',
+        :long     => '18 months',
+        :chrono   => '18:00:00:00:00'
       }
   }
 
@@ -221,7 +221,5 @@ describe ChronicDuration, "private methods" do
     it "should insert spaces where there aren't any" do
       ChronicDuration.instance_eval("cleanup('4m11.5s')").should == '4 minutes 11.5 seconds'
     end
-
   end
-
 end
