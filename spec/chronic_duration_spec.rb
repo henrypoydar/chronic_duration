@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 require 'chronic_duration'
 
 describe ChronicDuration, '.parse' do
@@ -12,17 +14,19 @@ describe ChronicDuration, '.parse' do
     '2 hrs 20 min'          => 2 * 3600 + 20 * 60,
     '2h20min'               => 2 * 3600 + 20 * 60,
     '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,
-    '1 year 6 mos 1 day'    => 1 * 31536000 + 6 * 30 * 24 * 3600 + 24 * 3600,
+    '1 year 6 mos 1 day'    => 1 * 31557600 + 6 * 30 * 24 * 3600 + 24 * 3600,
     '2.5 hrs'               => 2.5 * 3600,
-    '47 yrs 6 mos and 4.5d' => 47 * 31536000 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
+    '47 yrs 6 mos and 4.5d' => 47 * 31557600 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
     'two hours and twenty minutes' => 2 * 3600 + 20 * 60,
     'four hours and forty minutes' => 4 * 3600 + 40 * 60,
     'four hours, and fourty minutes' => 4 * 3600 + 40 * 60,
-    '3 weeks and, 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
-    '3 weeks, plus 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
-    '3 weeks with 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
+    '3 weeks and, 2 days'   => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
+    '3 weeks, plus 2 days'  => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
+    '3 weeks with 2 days'   => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
     '1 month'               => 3600 * 24 * 30,
-    '2 months'              => 3600 * 24 * 30 * 2
+    '2 months'              => 3600 * 24 * 30 * 2,
+    '18 months'             => 3600 * 24 * 30 * 18,
+    '1 year 6 months'       => 3600 * 24 * (365.25 + 6 * 30)
   }
 
   it "should return nil if the string can't be parsed" do
@@ -126,7 +130,7 @@ describe ChronicDuration, '.output' do
         :long     => '6 months 1 day',
         :chrono   => '6:01:00:00:00' # Yuck. FIXME
       },
-    (365 * 24 * 3600 + 24 * 3600 ) =>
+    (31644000) =>
       {
         :micro    => '1y1d',
         :short    => '1y 1d',
@@ -134,7 +138,7 @@ describe ChronicDuration, '.output' do
         :long     => '1 year 1 day',
         :chrono   => '1:00:01:00:00:00'
       },
-    (3  * 365 * 24 * 3600 + 24 * 3600 ) =>
+    (94759200) =>
       {
         :micro    => '3y1d',
         :short    => '3y 1d',
@@ -142,6 +146,14 @@ describe ChronicDuration, '.output' do
         :long     => '3 years 1 day',
         :chrono   => '3:00:01:00:00:00'
       },
+    (3600 * 24 * 30 * 18) =>
+      {
+        :micro    => '18mo',
+        :short    => '18mo',
+        :default  => '18 mos',
+        :long     => '18 months',
+        :chrono   => '18:00:00:00:00'
+      }
   }
 
   @exemplars.each do |k, v|
@@ -153,7 +165,7 @@ describe ChronicDuration, '.output' do
   end
 
   it "should show weeks when needed" do
-    ChronicDuration.output(15*24*60*60, :weeks => true).should =~ /.*wk.*/
+    ChronicDuration.output(45*24*60*60, :weeks => true).should =~ /.*wk.*/
   end
 
   it "should show the specified number of units if provided" do
@@ -209,7 +221,5 @@ describe ChronicDuration, "private methods" do
     it "should insert spaces where there aren't any" do
       ChronicDuration.instance_eval("cleanup('4m11.5s')").should == '4 minutes 11.5 seconds'
     end
-
   end
-
 end
