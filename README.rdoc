@@ -54,6 +54,21 @@ ChronicDuration.raise_exceptions can be set to true to raise exceptions when the
     ChronicDuration::DurationParseError: An invalid word "elephants" was used in the string to be parsed.
 
 
+ChronicDuration.use_units can be used to use only a subset of
+the supported units. For example:
+
+   >> ChronicDuration.use_units :hours, :minutes
+   >> ChronicDuration.parse('1:00')
+   => 3600
+   >> ChronicDuration.output(3600 * 48)
+   >> '48 hrs'
+
+To revert to all supported units just pass :all to use_units:
+
+   >> ChronicDuration.use_units :all
+   >> ChronicDuration.output(3600 * 48)
+   >> '2 days'
+
 == Contributors
 
 brianjlandau, jduff, olauzon, roboman, ianlevesque
