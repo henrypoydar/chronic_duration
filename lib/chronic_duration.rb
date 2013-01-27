@@ -26,6 +26,8 @@ module ChronicDuration
   # Given an integer and an optional format,
   # returns a formatted string representing elapsed time
   def output(seconds, opts = {})
+    int = seconds.to_i
+    seconds = int if seconds - int == 0 # if seconds end with .0
 
     opts[:format] ||= :default
 

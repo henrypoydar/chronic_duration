@@ -78,6 +78,14 @@ describe ChronicDuration, '.output' do
         :long     => '1 minute 20 seconds',
         :chrono   => '1:20'
       },
+    (60 + 20 + 0.0) =>
+      {
+        :micro    => '1m20s',
+        :short    => '1m 20s',
+        :default  => '1 min 20 secs',
+        :long     => '1 minute 20 seconds',
+        :chrono   => '1:20'
+      },
     (60 + 20.01) =>
       {
         :micro    => '1m20.01s',
