@@ -27,14 +27,22 @@ describe ChronicDuration do
       '2 months'              => 3600 * 24 * 30 * 2
     }
 
-    it "should return nil if the string can't be parsed" do
-      ChronicDuration.parse('gobblygoo').should be_nil
-    end
+    context "when string can't be parsed" do
 
-    it "should raise an exception if the string can't be parsed and @@raise_exceptions is set to true" do
-      ChronicDuration.raise_exceptions = true
-      lambda { ChronicDuration.parse('23 gobblygoos') }.should raise_exception(ChronicDuration::DurationParseError)
-      ChronicDuration.raise_exceptions = false
+      it "returns nil" do
+        ChronicDuration.parse('gobblygoo').should be_nil
+      end
+
+      context "when @@raise_exceptions set to true" do
+
+        it "raises with ChronicDuration::DurationParseError" do
+          ChronicDuration.raise_exceptions = true
+          lambda { ChronicDuration.parse('23 gobblygoos') }.should raise_exception(ChronicDuration::DurationParseError)
+          ChronicDuration.raise_exceptions = false
+        end
+
+      end
+
     end
 
     it "should return a float if seconds are in decimals" do
@@ -50,7 +58,7 @@ describe ChronicDuration do
     end
 
     @exemplars.each do |k, v|
-      it "should properly parse a duration like #{k}" do
+      it "parses a duration like #{k}" do
         ChronicDuration.parse(k).should == v
       end
     end
@@ -59,19 +67,7 @@ describe ChronicDuration do
 
   describe '.output' do
 
-    it "should return nil if the input can't be parsed" do
-      ChronicDuration.parse('gobblygoo').should be_nil
-    end
-
     @exemplars = {
-      #(0) =>
-        #{
-          #:micro    => '0s',
-          #:short    => '0s',
-          #:default  => '0 secs',
-          #:long     => '0 seconds',
-          #:chrono   => '0'
-        #},
       (60 + 20) =>
         {
           :micro    => '1m20s',
@@ -148,28 +144,32 @@ describe ChronicDuration do
 
     @exemplars.each do |k, v|
       v.each do |key, val|
-        it "should properly output a duration of #{k} seconds as #{val} using the #{key.to_s} format option" do
+        it "properly outputs a duration of #{k} seconds as #{val} using the #{key.to_s} format option" do
           ChronicDuration.output(k, :format => key).should == val
         end
       end
     end
 
-    it "should show weeks when needed" do
+    it "returns weeks when needed" do
       ChronicDuration.output(15*24*60*60, :weeks => true).should =~ /.*wk.*/
     end
 
-    it "should show the specified number of units if provided" do
+    it "returns the specified number of units if provided" do
       ChronicDuration.output(4 * 3600 + 60 + 1, units: 2).should == '4 hrs 1 min'
       ChronicDuration.output(6 * 30 * 24 * 3600 + 24 * 3600 + 3600 + 60 + 1, units: 3, format: :long).should == '6 months 1 day 1 hour'
     end
 
-    it "should use the default format when the format is not specified" do
-      ChronicDuration.output(2 * 3600 + 20 * 60).should == '2 hrs 20 mins'
+    context "when the format is not specified" do
+
+      it "uses the default format" do
+        ChronicDuration.output(2 * 3600 + 20 * 60).should == '2 hrs 20 mins'
+      end
+
     end
 
     @exemplars.each do |seconds, format_spec|
       format_spec.each do |format, _|
-        it "it should properly output a duration for #{seconds} that parses back to the same thing when using the #{format.to_s} format" do
+        it "outputs a duration for #{seconds} that parses back to the same thing when using the #{format.to_s} format" do
           ChronicDuration.parse(ChronicDuration.output(seconds, :format => format)).should == seconds
         end
       end
@@ -179,15 +179,15 @@ describe ChronicDuration do
 
   describe ".filter_by_type" do
 
-    it "should take a chrono-formatted time like 3:14 and return a human time like 3 minutes 14 seconds" do
+    it "receives a chrono-formatted time like 3:14 and return a human time like 3 minutes 14 seconds" do
       ChronicDuration.instance_eval("filter_by_type('3:14')").should == '3 minutes 14 seconds'
     end
 
-    it "should take a chrono-formatted time like 12:10:14 and return a human time like 12 hours 10 minutes 14 seconds" do
+    it "receives chrono-formatted time like 12:10:14 and return a human time like 12 hours 10 minutes 14 seconds" do
       ChronicDuration.instance_eval("filter_by_type('12:10:14')").should == '12 hours 10 minutes 14 seconds'
     end
 
-    it "should return the input if it's not a chrono-formatted time" do
+    it "returns the input if it's not a chrono-formatted time" do
       ChronicDuration.instance_eval("filter_by_type('4 hours')").should == '4 hours'
     end
 
@@ -195,15 +195,15 @@ describe ChronicDuration do
 
   describe ".cleanup" do
 
-    it "should clean up extraneous words" do
+    it "cleans up extraneous words" do
       ChronicDuration.instance_eval("cleanup('4 days and 11 hours')").should == '4 days 11 hours'
     end
 
-    it "should cleanup extraneous spaces" do
+    it "cleans up extraneous spaces" do
       ChronicDuration.instance_eval("cleanup('  4 days and 11     hours')").should == '4 days 11 hours'
     end
 
-    it "should insert spaces where there aren't any" do
+    it "inserts spaces where there aren't any" do
       ChronicDuration.instance_eval("cleanup('4m11.5s')").should == '4 minutes 11.5 seconds'
     end
 
