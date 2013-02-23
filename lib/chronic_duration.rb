@@ -1,5 +1,7 @@
 require 'numerizer' unless defined?(Numerizer)
+
 module ChronicDuration
+
   extend self
 
   class DurationParseError < StandardError
