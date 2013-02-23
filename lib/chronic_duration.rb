@@ -249,7 +249,7 @@ private
   end
 
   def white_list
-    self.mappings.map {|k, v| k}
+    self.mappings.keys
   end
 
 end
