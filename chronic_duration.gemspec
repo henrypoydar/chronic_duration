@@ -10,6 +10,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["hpoydar"]
   gem.email         = ["henry@poydar.com"]
   gem.description   = %q{A simple Ruby natural language parser for elapsed time. (For example, 4 hours and 30 minutes, 6 minutes 4 seconds, 3 days, etc.) Returns all results in seconds. Will return an integer unless you get tricky and need a float. (4 minutes and 13.47 seconds, for example.) The reverse can also be performed via the output method.}
+  gem.summary       = %q{A simple Ruby natural language parser for elapsed time}
   gem.homepage      = "https://github.com/hpoydar/chronic_duration"
 
   gem.files         = `git ls-files`.split($/)
