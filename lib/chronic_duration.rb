@@ -243,6 +243,7 @@ private
       'week'    => 'weeks',
       'w'       => 'weeks',
       'months'  => 'months',
+      'M'       => 'months',
       'mo'      => 'months',
       'mos'     => 'months',
       'month'   => 'months',
@@ -250,7 +251,8 @@ private
       'year'    => 'years',
       'yrs'     => 'years',
       'yr'      => 'years',
-      'y'       => 'years'
+      'y'       => 'years',
+      'Y'       => 'years'
     }
   end
 
