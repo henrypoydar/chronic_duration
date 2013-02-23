@@ -51,6 +51,7 @@ ChronicDuration.raise_exceptions can be set to true to raise exceptions when the
 ## Contributing
 
 Fork and pull request after your specs are green. Add your handle to the list below.
+Also looking for additional maintainers.
 
 ## Contributors
 
