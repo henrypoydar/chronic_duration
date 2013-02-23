@@ -55,6 +55,28 @@ describe ChronicDuration, '.parse' do
     end
   end
 
+  context "when only hours and minutes units are enabled" do
+    before { ChronicDuration.use_units :hours, :minutes }
+    after { ChronicDuration.use_units :all }
+
+    it "should parse 4:30 as 4 hours 30 minutes" do
+      ChronicDuration.parse("4:30").should == (4 * 60 + 30) * 60
+    end
+
+    it "should ignore other units" do
+      ChronicDuration.parse("4h 30m 15s").should == (4 * 60 + 30) * 60
+    end
+
+    it "should return nil if only other units are used" do
+      ChronicDuration.parse("4s").should be_nil
+    end
+
+    it "should raise an exception if other units are used and @@raise_exceptions is true" do
+      ChronicDuration.raise_exceptions = true
+      lambda { ChronicDuration.parse('3h 15s') }.should raise_exception(ChronicDuration::DurationParseError)
+      ChronicDuration.raise_exceptions = false
+    end
+  end
 end
 
 describe ChronicDuration, '.output' do
@@ -172,6 +194,15 @@ describe ChronicDuration, '.output' do
       it "it should properly output a duration for #{seconds} that parses back to the same thing when using the #{format.to_s} format" do
         ChronicDuration.parse(ChronicDuration.output(seconds, :format => format)).should == seconds
       end
+    end
+  end
+
+  context "when only hours and minutes units are enabled" do
+    before { ChronicDuration.use_units :hours, :minutes }
+    after { ChronicDuration.use_units :all }
+
+    it "should express the output in terms of hours and minutes only" do
+      ChronicDuration.output((40 * 60 + 15) * 60).should == "40 hrs 15 mins"
     end
   end
 end

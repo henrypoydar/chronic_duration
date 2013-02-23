@@ -6,6 +6,8 @@ module ChronicDuration
   end
 
   @@raise_exceptions = false
+  @@duration_units = @@supported_duration_units = %w(seconds minutes hours days weeks months years)
+
 
   def self.raise_exceptions
     !!@@raise_exceptions
@@ -13,6 +15,14 @@ module ChronicDuration
 
   def self.raise_exceptions=(value)
     @@raise_exceptions = !!value
+  end
+
+  def self.use_units(*units)
+    if units.first == :all
+      @@duration_units = @@supported_duration_units
+    else
+      @@duration_units = @@supported_duration_units & units.map(&:to_s)
+    end
   end
 
   # Given a string representation of elapsed time,
@@ -26,45 +36,19 @@ module ChronicDuration
   # Given an integer and an optional format,
   # returns a formatted string representing elapsed time
   def output(seconds, opts = {})
-
     opts[:format] ||= :default
-
-    years = months = weeks = days = hours = minutes = 0
-
     decimal_places = seconds.to_s.split('.').last.length if seconds.is_a?(Float)
-
-    if seconds >= 60
-      minutes = (seconds / 60).to_i
-      seconds = seconds % 60
-      if minutes >= 60
-        hours = (minutes / 60).to_i
-        minutes = (minutes % 60).to_i
-        if hours >= 24
-          days = (hours / 24).to_i
-          hours = (hours % 24).to_i
-          if opts[:weeks]
-            if days >= 7
-              weeks = (days / 7).to_i
-              days = (days % 7).to_i
-              if weeks >= 4
-                months = (weeks / 4).to_i
-                weeks = (weeks % 4).to_i
-              end
-            end
-          else
-            if days >= 30
-              months = (days / 30).to_i
-              days = (days % 30).to_i
-            end
-          end
-          if months >= 12
-            years = (months / 12).to_i
-            months = (months % 12).to_i
-            days = days - (5 * years)
-          end
-        end
+    values = Hash.new(0)
+    units = duration_units_list.reverse
+    units = units - ['weeks'] unless opts[:weeks]
+    units.each do |unit|
+      mult = duration_units_seconds_multiplier(unit)
+      if seconds >= mult
+        values[unit] = (seconds / mult).to_i
+        seconds = seconds % mult
       end
     end
+    values[units.last] += seconds / duration_units_seconds_multiplier(units.last)
 
     joiner = ' '
     process = nil
@@ -72,22 +56,22 @@ module ChronicDuration
     case opts[:format]
     when :micro
       dividers = {
-        :years => 'y', :months => 'mo', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+        'years' => 'y', 'months' => 'mo', 'weeks' => 'w', 'days' => 'd', 'hours' => 'h', 'minutes' => 'm', 'seconds' => 's' }
       joiner = ''
     when :short
       dividers = {
-        :years => 'y', :months => 'mo', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+        'years' => 'y', 'months' => 'mo', 'weeks' => 'w', 'days' => 'd', 'hours' => 'h', 'minutes' => 'm', 'seconds' => 's' }
     when :default
       dividers = {
-        :years => ' yr', :months => ' mo', :weeks => ' wk', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
+        'years' => ' yr', 'months' => ' mo', 'weeks' => ' wk', 'days' => ' day', 'hours' => ' hr', 'minutes' => ' min', 'seconds' => ' sec',
         :pluralize => true }
     when :long
       dividers = {
-        :years => ' year', :months => ' month', :weeks => ' week', :days => ' day', :hours => ' hour', :minutes => ' minute', :seconds => ' second',
+        'years' => ' year', 'months' => ' month', 'weeks' => ' week', 'days' => ' day', 'hours' => ' hour', 'minutes' => ' minute', 'seconds' => ' second',
         :pluralize => true }
     when :chrono
       dividers = {
-        :years => ':', :months => ':', :weeks => ':', :days => ':', :hours => ':', :minutes => ':', :seconds => ':', :keep_zero => true }
+        'years' => ':', 'months' => ':', 'weeks' => ':', 'days' => ':', 'hours' => ':', 'minutes' => ':', 'seconds' => ':', :keep_zero => true }
       process = lambda do |str|
         # Pad zeros
         # Get rid of lead off times if they are zero
@@ -98,15 +82,13 @@ module ChronicDuration
       joiner = ''
     end
 
-    result = [:years, :months, :weeks, :days, :hours, :minutes, :seconds].map do |t|
-      next if t == :weeks && !opts[:weeks]
-      num = eval(t.to_s)
-      num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
-      humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
-    end.compact!
-
+    result = units.map do |unit|
+      num = values[unit]
+      num = ("%.#{decimal_places}f" % num) if num.is_a?(Float)
+      humanize_time_unit( num, dividers[unit], dividers[:pluralize], dividers[:keep_zero] )
+    end
+    result.compact!
     result = result[0...opts[:units]] if opts[:units]
-
     result = result.join(joiner)
 
     if process
@@ -150,8 +132,9 @@ private
   end
 
   def duration_units_list
-    %w(seconds minutes hours days weeks months years)
+    @@duration_units
   end
+
   def duration_units_seconds_multiplier(unit)
     return 0 unless duration_units_list.include?(unit)
     case unit
@@ -199,7 +182,7 @@ private
         next
       end
       stripped_word = word.strip.gsub(/^,/, '').gsub(/,$/, '')
-      if mappings.has_key?(stripped_word)
+      if mappings.has_key?(stripped_word) && duration_units_list.include?(mappings[stripped_word])
         res << mappings[stripped_word]
       elsif !join_words.include?(stripped_word) and ChronicDuration.raise_exceptions
         raise DurationParseError, "An invalid word #{word.inspect} was used in the string to be parsed."
