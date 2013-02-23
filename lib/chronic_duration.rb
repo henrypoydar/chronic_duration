@@ -28,6 +28,8 @@ module ChronicDuration
   # Given an integer and an optional format,
   # returns a formatted string representing elapsed time
   def output(seconds, opts = {})
+    int = seconds.to_i
+    seconds = int if seconds - int == 0 # if seconds end with .0
 
     opts[:format] ||= :default
 
@@ -95,7 +97,11 @@ module ChronicDuration
         # Get rid of lead off times if they are zero
         # Get rid of lead off zero
         # Get rid of trailing :
-        str.gsub(/\b\d\b/) { |d| ("%02d" % d) }.gsub(/^(00:)+/, '').gsub(/^0/, '').gsub(/:$/, '')
+        divider = ':'
+        str.split(divider).map { |n|
+          # add zeros only if n is an integer
+          n.include?('.') ? ("%04.#{decimal_places}f" % n) : ("%02d" % n)
+        }.join(divider).gsub(/^(00:)+/, '').gsub(/^0/, '').gsub(/:$/, '')
       end
       joiner = ''
     end
