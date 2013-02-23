@@ -1,15 +1,10 @@
-= Chronic Duration
+# Chronic Duration
 
 A simple Ruby natural language parser for elapsed time. (For example, 4 hours and 30 minutes, 6 minutes 4 seconds, 3 days, etc.) Returns all results in seconds. Will return an integer unless you get tricky and need a float. (4 minutes and 13.47 seconds, for example.)
 
-The reverse can also be accomplished with the output method.  So pass in seconds and you can get strings like 4 mins 31.51 secs (default  format), 4h 3m 30s, or 4:01:29.
+The reverse can also be accomplished with the output method. So pass in seconds and you can get strings like 4 mins 31.51 secs (default  format), 4h 3m 30s, or 4:01:29.
 
-== Installation
-
-    $ sudo gem sources -a http://gemcutter.org
-    $ sudo gem install chronic_duration
-
-== Usage
+## Usage
 
     >> require 'chronic_duration'
     => true
@@ -54,11 +49,11 @@ ChronicDuration.raise_exceptions can be set to true to raise exceptions when the
     ChronicDuration::DurationParseError: An invalid word "elephants" was used in the string to be parsed.
 
 
-== Contributors
+## Contributors
 
 brianjlandau, jduff, olauzon, roboman, ianlevesque
 
-== TODO
+## TODO
 
 * Benchmark, optimize
 * Context specific matching (E.g., for '4m30s', assume 'm' is minutes not months)
