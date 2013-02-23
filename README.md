@@ -48,6 +48,9 @@ ChronicDuration.raise_exceptions can be set to true to raise exceptions when the
     >> ChronicDuration.parse('4 elephants and 3 Astroids')
     ChronicDuration::DurationParseError: An invalid word "elephants" was used in the string to be parsed.
 
+## Contributing
+
+Fork and pull request after your specs are green. Add your handle to the list below.
 
 ## Contributors
 
