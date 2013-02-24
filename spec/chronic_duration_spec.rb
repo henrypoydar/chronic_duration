@@ -31,6 +31,14 @@ describe ChronicDuration, '.parse' do
     ChronicDuration.parse('gobblygoo').should be_nil
   end
 
+  it "should return nil if the string parses as zero" do
+    ChronicDuration.parse('0').should be_nil
+  end
+
+  it "should return zero if the string parses as zero and the keep_zero option is true" do
+    ChronicDuration.parse('0', :keep_zero => true).should == 0
+  end
+
   it "should raise an exception if the string can't be parsed and @@raise_exceptions is set to true" do
     ChronicDuration.raise_exceptions = true
     lambda { ChronicDuration.parse('23 gobblygoos') }.should raise_exception(ChronicDuration::DurationParseError)
@@ -198,6 +206,33 @@ describe ChronicDuration, '.output' do
     v.each do |key, val|
       it "should properly output a duration of #{k} seconds as #{val} using the #{key.to_s} format option" do
         ChronicDuration.output(k, :format => key).should == val
+      end
+    end
+  end
+
+  @keep_zero_exemplars = {
+    (true) =>
+      {
+        :micro    => '0s',
+        :short    => '0s',
+        :default  => '0 secs',
+        :long     => '0 seconds',
+        :chrono   => '0'
+      },
+    (false) =>
+      {
+        :micro    => nil,
+        :short    => nil,
+        :default  => nil,
+        :long     => nil,
+        :chrono   => '0'
+      },
+  }
+
+  @keep_zero_exemplars.each do |k, v|
+    v.each do |key, val|
+      it "should properly output a duration of 0 seconds as #{val.nil? ? "nil" : val} using the #{key.to_s} format option, if the keep_zero option is #{k.to_s}" do
+        ChronicDuration.output(0, :format => key, :keep_zero => k).should == val
       end
     end
   end
