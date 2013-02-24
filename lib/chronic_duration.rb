@@ -22,7 +22,7 @@ module ChronicDuration
   # second are input)
   def parse(string, opts = {})
     result = calculate_from_words(cleanup(string), opts)
-    result == 0 ? nil : result
+    (!opts[:keep_zero] and result == 0) ? nil : result
   end
 
   # Given an integer and an optional format,
@@ -32,6 +32,7 @@ module ChronicDuration
     seconds = int if seconds - int == 0 # if seconds end with .0
 
     opts[:format] ||= :default
+    opts[:keep_zero] ||= false
 
     years = months = weeks = days = hours = minutes = 0
 
@@ -110,7 +111,9 @@ module ChronicDuration
       next if t == :weeks && !opts[:weeks]
       num = eval(t.to_s)
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
-      humanize_time_unit( num, dividers[t], dividers[:pluralize], dividers[:keep_zero] )
+      keep_zero = dividers[:keep_zero]
+      keep_zero ||= opts[:keep_zero] if t == :seconds
+      humanize_time_unit( num, dividers[t], dividers[:pluralize], keep_zero )
     end.compact!
 
     result = result[0...opts[:units]] if opts[:units]
