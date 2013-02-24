@@ -65,7 +65,7 @@ Also looking for additional maintainers.
 
 ## Contributors
 
-pdf, brianjlandau, jduff, olauzon, roboman, ianlevesque
+errm,pdf, brianjlandau, jduff, olauzon, roboman, ianlevesque
 
 ## TODO
 
