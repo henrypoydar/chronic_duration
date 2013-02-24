@@ -38,7 +38,20 @@ module ChronicDuration
 
     decimal_places = seconds.to_s.split('.').last.length if seconds.is_a?(Float)
 
-    if seconds >= 60
+    minute = 60
+    hour = 60 * minute
+    day = 24 * hour
+    month = 30 * day
+    year = 31557600
+
+    if seconds >= 31557600 && seconds%year < seconds%month
+      years = seconds / year
+      months = seconds % year / month
+      days = seconds % year % month / day
+      hours = seconds % year % month % day / hour
+      minutes = seconds % year % month % day % hour / minute
+      seconds = seconds % year % month % day % hour % minute
+    elsif seconds >= 60
       minutes = (seconds / 60).to_i
       seconds = seconds % 60
       if minutes >= 60
@@ -61,11 +74,6 @@ module ChronicDuration
               months = (days / 30).to_i
               days = (days % 30).to_i
             end
-          end
-          if months >= 12
-            years = (months / 12).to_i
-            months = (months % 12).to_i
-            days = days - (5 * years)
           end
         end
       end
@@ -166,7 +174,7 @@ private
   def duration_units_seconds_multiplier(unit)
     return 0 unless duration_units_list.include?(unit)
     case unit
-    when 'years';   31536000 # doesn't accounts for leap years
+    when 'years';   31557600
     when 'months';  3600 * 24 * 30
     when 'weeks';   3600 * 24 * 7
     when 'days';    3600 * 24
@@ -174,10 +182,6 @@ private
     when 'minutes'; 60
     when 'seconds'; 1
     end
-  end
-
-  def error_message
-    'Sorry, that duration could not be parsed'
   end
 
   # Parse 3:41:59 and return 3 hours 41 minutes 59 seconds
@@ -260,9 +264,4 @@ private
   def join_words
     ['and', 'with', 'plus']
   end
-
-  def white_list
-    self.mappings.keys
-  end
-
 end
