@@ -45,7 +45,7 @@ describe ChronicDuration do
 
         it "raises with ChronicDuration::DurationParseError" do
           ChronicDuration.raise_exceptions = true
-          lambda { ChronicDuration.parse('23 gobblygoos') }.should raise_exception(ChronicDuration::DurationParseError)
+          expect { ChronicDuration.parse('23 gobblygoos') }.to raise_error(ChronicDuration::DurationParseError)
           ChronicDuration.raise_exceptions = false
         end
 
@@ -198,7 +198,7 @@ describe ChronicDuration do
     end
 
     it "returns weeks when needed" do
-      ChronicDuration.output(15*24*60*60, :weeks => true).should =~ /.*wk.*/
+      ChronicDuration.output(45*24*60*60, :weeks => true).should =~ /.*wk.*/
     end
 
     it "returns the specified number of units if provided" do

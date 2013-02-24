@@ -177,10 +177,6 @@ private
     end
   end
 
-  def error_message
-    'Sorry, that duration could not be parsed'
-  end
-
   # Parse 3:41:59 and return 3 hours 41 minutes 59 seconds
   def filter_by_type(string)
     chrono_units_list = duration_units_list.reject {|v| v == "weeks"}
@@ -261,9 +257,4 @@ private
   def join_words
     ['and', 'with', 'plus']
   end
-
-  def white_list
-    self.mappings.keys
-  end
-
 end
