@@ -24,13 +24,21 @@ describe ChronicDuration do
       '3 weeks, plus 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
       '3 weeks with 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
       '1 month'               => 3600 * 24 * 30,
-      '2 months'              => 3600 * 24 * 30 * 2
+      '2 months'              => 3600 * 24 * 30 * 2,
+      '18 months'             => 3600 * 24 * 30 * 18,
+      '1 year 6 months'       => 3600 * 24 * (365 + 6 * 30),
+      'day'                   => 3600 * 24,
+      'minute 30s'            => 90
     }
 
     context "when string can't be parsed" do
 
       it "returns nil" do
         ChronicDuration.parse('gobblygoo').should be_nil
+      end
+
+      it "cannot parse zero" do
+        ChronicDuration.parse('0').should be_nil
       end
 
       context "when @@raise_exceptions set to true" do
@@ -43,6 +51,10 @@ describe ChronicDuration do
 
       end
 
+    end
+
+    it "should return zero if the string parses as zero and the keep_zero option is true" do
+      ChronicDuration.parse('0', :keep_zero => true).should == 0
     end
 
     it "should return a float if seconds are in decimals" do
@@ -140,12 +152,47 @@ describe ChronicDuration do
           :long     => '3 years 1 day',
           :chrono   => '3:00:01:00:00:00'
         },
+      (3600 * 24 * 30 * 18) =>
+        {
+          :micro    => '1y5mo25d',
+          :short    => '1y 5mo 25d',
+          :default  => '1 yr 5 mos 25 days',
+          :long     => '1 year 5 months 25 days',
+          :chrono   => '1:05:25:00:00:00'
+        }
     }
 
     @exemplars.each do |k, v|
       v.each do |key, val|
         it "properly outputs a duration of #{k} seconds as #{val} using the #{key.to_s} format option" do
           ChronicDuration.output(k, :format => key).should == val
+        end
+      end
+    end
+
+    @keep_zero_exemplars = {
+      (true) =>
+      {
+        :micro    => '0s',
+        :short    => '0s',
+        :default  => '0 secs',
+        :long     => '0 seconds',
+        :chrono   => '0'
+      },
+        (false) =>
+      {
+        :micro    => nil,
+        :short    => nil,
+        :default  => nil,
+        :long     => nil,
+        :chrono   => '0'
+      },
+    }
+
+    @keep_zero_exemplars.each do |k, v|
+      v.each do |key, val|
+        it "should properly output a duration of 0 seconds as #{val.nil? ? "nil" : val} using the #{key.to_s} format option, if the keep_zero option is #{k.to_s}" do
+          ChronicDuration.output(0, :format => key, :keep_zero => k).should == val
         end
       end
     end
