@@ -14,9 +14,9 @@ describe ChronicDuration do
       '2 hrs 20 min'          => 2 * 3600 + 20 * 60,
       '2h20min'               => 2 * 3600 + 20 * 60,
       '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,
-      '1 year 6 mos 1 day'    => 1 * 31536000 + 6 * 30 * 24 * 3600 + 24 * 3600,
+      '1 year 6 mos 1 day'    => 1 * 31557600 + 6 * 30 * 24 * 3600 + 24 * 3600,
       '2.5 hrs'               => 2.5 * 3600,
-      '47 yrs 6 mos and 4.5d' => 47 * 31536000 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
+      '47 yrs 6 mos and 4.5d' => 47 * 31557600 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
       'two hours and twenty minutes' => 2 * 3600 + 20 * 60,
       'four hours and forty minutes' => 4 * 3600 + 40 * 60,
       'four hours, and fourty minutes' => 4 * 3600 + 40 * 60,
@@ -24,7 +24,11 @@ describe ChronicDuration do
       '3 weeks, plus 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
       '3 weeks with 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
       '1 month'               => 3600 * 24 * 30,
-      '2 months'              => 3600 * 24 * 30 * 2
+      '2 months'              => 3600 * 24 * 30 * 2,
+      '18 months'             => 3600 * 24 * 30 * 18,
+      '1 year 6 months'       => (3600 * 24 * (365.25 + 6 * 30)).to_i,
+      'day'                   => 3600 * 24,
+      'minute 30s'            => 90
     }
 
     context "when string can't be parsed" do
@@ -33,16 +37,24 @@ describe ChronicDuration do
         ChronicDuration.parse('gobblygoo').should be_nil
       end
 
+      it "cannot parse zero" do
+        ChronicDuration.parse('0').should be_nil
+      end
+
       context "when @@raise_exceptions set to true" do
 
         it "raises with ChronicDuration::DurationParseError" do
           ChronicDuration.raise_exceptions = true
-          lambda { ChronicDuration.parse('23 gobblygoos') }.should raise_exception(ChronicDuration::DurationParseError)
+          expect { ChronicDuration.parse('23 gobblygoos') }.to raise_error(ChronicDuration::DurationParseError)
           ChronicDuration.raise_exceptions = false
         end
 
       end
 
+    end
+
+    it "should return zero if the string parses as zero and the keep_zero option is true" do
+      ChronicDuration.parse('0', :keep_zero => true).should == 0
     end
 
     it "should return a float if seconds are in decimals" do
@@ -124,7 +136,7 @@ describe ChronicDuration do
           :long     => '6 months 1 day',
           :chrono   => '6:01:00:00:00' # Yuck. FIXME
         },
-      (365 * 24 * 3600 + 24 * 3600 ) =>
+      (365.25 * 24 * 3600 + 24 * 3600 ).to_i =>
         {
           :micro    => '1y1d',
           :short    => '1y 1d',
@@ -132,7 +144,7 @@ describe ChronicDuration do
           :long     => '1 year 1 day',
           :chrono   => '1:00:01:00:00:00'
         },
-      (3  * 365 * 24 * 3600 + 24 * 3600 ) =>
+      (3  * 365.25 * 24 * 3600 + 24 * 3600 ).to_i =>
         {
           :micro    => '3y1d',
           :short    => '3y 1d',
@@ -140,6 +152,14 @@ describe ChronicDuration do
           :long     => '3 years 1 day',
           :chrono   => '3:00:01:00:00:00'
         },
+      (3600 * 24 * 30 * 18) =>
+        {
+          :micro    => '18mo',
+          :short    => '18mo',
+          :default  => '18 mos',
+          :long     => '18 months',
+          :chrono   => '18:00:00:00:00'
+        }
     }
 
     @exemplars.each do |k, v|
@@ -150,8 +170,35 @@ describe ChronicDuration do
       end
     end
 
+    @keep_zero_exemplars = {
+      (true) =>
+      {
+        :micro    => '0s',
+        :short    => '0s',
+        :default  => '0 secs',
+        :long     => '0 seconds',
+        :chrono   => '0'
+      },
+        (false) =>
+      {
+        :micro    => nil,
+        :short    => nil,
+        :default  => nil,
+        :long     => nil,
+        :chrono   => '0'
+      },
+    }
+
+    @keep_zero_exemplars.each do |k, v|
+      v.each do |key, val|
+        it "should properly output a duration of 0 seconds as #{val.nil? ? "nil" : val} using the #{key.to_s} format option, if the keep_zero option is #{k.to_s}" do
+          ChronicDuration.output(0, :format => key, :keep_zero => k).should == val
+        end
+      end
+    end
+
     it "returns weeks when needed" do
-      ChronicDuration.output(15*24*60*60, :weeks => true).should =~ /.*wk.*/
+      ChronicDuration.output(45*24*60*60, :weeks => true).should =~ /.*wk.*/
     end
 
     it "returns the specified number of units if provided" do
