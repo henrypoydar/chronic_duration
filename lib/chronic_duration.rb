@@ -248,6 +248,8 @@ private
       'd'       => 'days',
       'weeks'   => 'weeks',
       'week'    => 'weeks',
+      'wks'     => 'weeks',
+      'wk'      => 'weeks',
       'w'       => 'weeks',
       'months'  => 'months',
       'mo'      => 'months',
