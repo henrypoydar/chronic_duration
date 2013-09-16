@@ -40,9 +40,9 @@ module ChronicDuration
 
     minute = 60
     hour = 60 * minute
-    day = 24 * hour
-    month = 30 * day
-    year = 31557600
+    day = 8 * hour
+    month = 22 * day
+    year = 260 * day
 
     if seconds >= 31557600 && seconds%year < seconds%month
       years = seconds / year
@@ -174,10 +174,10 @@ private
   def duration_units_seconds_multiplier(unit)
     return 0 unless duration_units_list.include?(unit)
     case unit
-    when 'years';   31557600
-    when 'months';  3600 * 24 * 30
-    when 'weeks';   3600 * 24 * 7
-    when 'days';    3600 * 24
+    when 'years';   3600 * 8 * 260
+    when 'months';  3600 * 8 * 22
+    when 'weeks';   3600 * 8 * 5
+    when 'days';    3600 * 8
     when 'hours';   3600
     when 'minutes'; 60
     when 'seconds'; 1
@@ -236,7 +236,6 @@ private
       'minute'  => 'minutes',
       'mins'    => 'minutes',
       'min'     => 'minutes',
-      'm'       => 'minutes',
       'hours'   => 'hours',
       'hour'    => 'hours',
       'hrs'     => 'hours',
@@ -249,7 +248,10 @@ private
       'weeks'   => 'weeks',
       'week'    => 'weeks',
       'w'       => 'weeks',
+      'wk'       => 'weeks',
+      'wks'       => 'weeks',
       'months'  => 'months',
+      'm'       => 'months',
       'mo'      => 'months',
       'mos'     => 'months',
       'month'   => 'months',

@@ -221,7 +221,11 @@ describe ChronicDuration do
         end
       end
     end
-
+    
+    context "when the unit multiplier changes" do
+      
+    end
+    
   end
 
   describe ".filter_by_type" do
