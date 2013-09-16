@@ -60,21 +60,6 @@ module ChronicDuration
         if hours >= 8
           days = (hours / 8).to_i
           hours = (hours % 8).to_i
-          if opts[:weeks]
-            if days >= 5
-              weeks = (days / 5).to_i
-              days = (days % 5).to_i
-              if weeks >= 4
-                months = (weeks / 4).to_i
-                weeks = (weeks % 4).to_i
-              end
-            end
-          else
-            if days >= 22
-              months = (days / 22).to_i
-              days = (days % 22).to_i
-            end
-          end
         end
       end
     end
