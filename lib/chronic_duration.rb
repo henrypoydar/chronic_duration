@@ -70,14 +70,14 @@ module ChronicDuration
     case opts[:format]
     when :micro
       dividers = {
-        :years => 'y', :months => 'mo', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+        :years => 'y', :months => 'm', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'min', :seconds => 's' }
       joiner = ''
     when :short
       dividers = {
-        :years => 'y', :months => 'mo', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
+        :years => 'y', :months => 'm', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'min', :seconds => 's' }
     when :default
       dividers = {
-        :years => ' yr', :months => ' mo', :weeks => ' wk', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
+        :years => ' yr', :months => ' m', :weeks => ' wk', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
         :pluralize => true }
     when :long
       dividers = {
