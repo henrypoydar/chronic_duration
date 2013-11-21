@@ -256,4 +256,21 @@ describe ChronicDuration do
 
   end
 
+  describe "work week" do
+    before(:all) do
+      ChronicDuration.hours_per_day = 8
+      ChronicDuration.days_per_week = 5
+    end
+
+    after(:all) do
+      ChronicDuration.hours_per_day = 24
+      ChronicDuration.days_per_week = 7
+    end
+
+    it "should parse knowing the work week" do
+      week = ChronicDuration.parse('5d')
+      ChronicDuration.parse('40h').should == week
+      ChronicDuration.parse('1w').should == week
+    end
+  end
 end
