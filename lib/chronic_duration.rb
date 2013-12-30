@@ -79,7 +79,7 @@ module ChronicDuration
       end
     end
 
-    joiner = ' '
+    joiner = opts.fetch(:joiner) { ' ' }
     process = nil
 
     case opts[:format]

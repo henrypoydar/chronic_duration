@@ -32,6 +32,8 @@ The reverse can also be accomplished with the output method. So pass in seconds 
     => 2 wks 1 day 1 hr
     >> ChronicDuration.output(1299600, :weeks => true, :units => 2)
     => 2 wks 1 day
+    >> ChronicDuration.output(1299600, :weeks => true, :units => 2, :joiner => ', ')
+    => 2 wks, 1 day
     >> ChronicDuration.output(1296000)
     => 15 days
 
@@ -65,7 +67,7 @@ Also looking for additional maintainers.
 
 ## Contributors
 
-errm,pdf, brianjlandau, jduff, olauzon, roboman, ianlevesque
+errm,pdf, brianjlandau, jduff, olauzon, roboman, ianlevesque, bolandrm
 
 ## TODO
 
