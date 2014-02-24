@@ -8,6 +8,8 @@ module ChronicDuration
   end
 
   @@raise_exceptions = false
+  @@hours_per_day = 24
+  @@days_per_week = 7
 
   def self.raise_exceptions
     !!@@raise_exceptions
@@ -15,6 +17,22 @@ module ChronicDuration
 
   def self.raise_exceptions=(value)
     @@raise_exceptions = !!value
+  end
+
+  def self.hours_per_day
+    @@hours_per_day
+  end
+
+  def self.hours_per_day=(value)
+    @@hours_per_day = value
+  end
+
+  def self.days_per_week
+    @@days_per_week
+  end
+
+  def self.days_per_week=(value)
+    @@days_per_week = value
   end
 
   # Given a string representation of elapsed time,
@@ -40,7 +58,7 @@ module ChronicDuration
 
     minute = 60
     hour = 60 * minute
-    day = 24 * hour
+    day = ChronicDuration.hours_per_day * hour
     month = 30 * day
     year = 31557600
 
@@ -57,13 +75,13 @@ module ChronicDuration
       if minutes >= 60
         hours = (minutes / 60).to_i
         minutes = (minutes % 60).to_i
-        if hours >= 24
-          days = (hours / 24).to_i
-          hours = (hours % 24).to_i
+        if hours >= ChronicDuration.hours_per_day
+          days = (hours / ChronicDuration.hours_per_day).to_i
+          hours = (hours % ChronicDuration.hours_per_day).to_i
           if opts[:weeks]
-            if days >= 7
-              weeks = (days / 7).to_i
-              days = (days % 7).to_i
+            if days >= ChronicDuration.days_per_week
+              weeks = (days / ChronicDuration.days_per_week).to_i
+              days = (days % ChronicDuration.days_per_week).to_i
               if weeks >= 4
                 months = (weeks / 4).to_i
                 weeks = (weeks % 4).to_i
@@ -175,9 +193,9 @@ private
     return 0 unless duration_units_list.include?(unit)
     case unit
     when 'years';   31557600
-    when 'months';  3600 * 24 * 30
-    when 'weeks';   3600 * 24 * 7
-    when 'days';    3600 * 24
+    when 'months';  3600 * ChronicDuration.hours_per_day * 30
+    when 'weeks';   3600 * ChronicDuration.hours_per_day * ChronicDuration.days_per_week
+    when 'days';    3600 * ChronicDuration.hours_per_day
     when 'hours';   3600
     when 'minutes'; 60
     when 'seconds'; 1
