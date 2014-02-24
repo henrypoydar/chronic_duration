@@ -222,6 +222,10 @@ describe ChronicDuration do
       end
     end
 
+    it "uses user-specified joiner if provided" do
+      ChronicDuration.output(2 * 3600 + 20 * 60, joiner: ', ').should == '2 hrs, 20 mins'
+    end
+
   end
 
   describe ".filter_by_type" do
