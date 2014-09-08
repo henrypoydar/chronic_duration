@@ -75,22 +75,24 @@ module ChronicDuration
       if minutes >= 60
         hours = (minutes / 60).to_i
         minutes = (minutes % 60).to_i
-        if hours >= ChronicDuration.hours_per_day
-          days = (hours / ChronicDuration.hours_per_day).to_i
-          hours = (hours % ChronicDuration.hours_per_day).to_i
-          if opts[:weeks]
-            if days >= ChronicDuration.days_per_week
-              weeks = (days / ChronicDuration.days_per_week).to_i
-              days = (days % ChronicDuration.days_per_week).to_i
-              if weeks >= 4
-                months = (weeks / 4).to_i
-                weeks = (weeks % 4).to_i
+        if !opts[:limit_to_hours]
+          if hours >= ChronicDuration.hours_per_day
+            days = (hours / ChronicDuration.hours_per_day).to_i
+            hours = (hours % ChronicDuration.hours_per_day).to_i
+            if opts[:weeks]
+              if days >= ChronicDuration.days_per_week
+                weeks = (days / ChronicDuration.days_per_week).to_i
+                days = (days % ChronicDuration.days_per_week).to_i
+                if weeks >= 4
+                  months = (weeks / 4).to_i
+                  weeks = (weeks % 4).to_i
+                end
               end
-            end
-          else
-            if days >= 30
-              months = (days / 30).to_i
-              days = (days % 30).to_i
+            else
+              if days >= 30
+                months = (days / 30).to_i
+                days = (days % 30).to_i
+              end
             end
           end
         end
@@ -238,8 +240,8 @@ private
         raise DurationParseError, "An invalid word #{word.inspect} was used in the string to be parsed."
       end
     end
-    # add '1' at front if string starts with something recognizable but not with a number, like 'day' or 'minute 30sec' 
-    res.unshift(1) if res.length > 0 && mappings[res[0]]  
+    # add '1' at front if string starts with something recognizable but not with a number, like 'day' or 'minute 30sec'
+    res.unshift(1) if res.length > 0 && mappings[res[0]]
     res.join(' ')
   end
 
