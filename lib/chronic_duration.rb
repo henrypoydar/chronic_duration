@@ -151,8 +151,7 @@ module ChronicDuration
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
       keep_zero = dividers[:keep_zero]
       keep_zero ||= opts[:keep_zero] if t == :seconds
-      humanized_num = humanize_time_unit( dividers[t], dividers[:pluralize], keep_zero, dividers[:iso] )
-      Rails.logger.info(humanized_num.inspect)
+      humanized_num = humanize_time_unit( num, dividers[t], dividers[:pluralize], keep_zero )
       if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !iso_time_part && !humanized_num.nil?
         iso_time_part = true
         'T' + humanized_num
