@@ -156,6 +156,7 @@ module ChronicDuration
       Rails.logger.info(dividers[:iso])
       Rails.logger.info(!iso_time_part)
       Rails.logger.info(!humanized_num.nil?)
+      Rails.logger.info([:hours, :minutes, :seconds].include? t && dividers[:iso] && !iso_time_part && !humanized_num.nil?)
       if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !iso_time_part && !humanized_num.nil?
         iso_time_part = true
         'T' + humanized_num
