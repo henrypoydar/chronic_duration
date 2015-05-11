@@ -157,7 +157,7 @@ module ChronicDuration
         iso_time_part = true
       end
       res << humanize_time_unit( num, dividers[t], dividers[:pluralize], keep_zero )
-      res
+      #res
     end.compact!
 
     result = result[0...opts[:units]] if opts[:units]
