@@ -152,10 +152,10 @@ module ChronicDuration
       keep_zero = dividers[:keep_zero]
       keep_zero ||= opts[:keep_zero] if t == :seconds
       humanized_num = humanize_time_unit( num, dividers[t], dividers[:pluralize], keep_zero )
-      Rails.logger.info(t.inspect)
-      Rails.logger.info(dividers[:iso].inspect)
-      Rails.logger.info(iso_time_part.inspect)
-      Rails.logger.info(humanized_num.inspect)
+      Rails.logger.info([:hours, :minutes, :seconds].include? t)
+      Rails.logger.info(dividers[:iso])
+      Rails.logger.info(!iso_time_part)
+      Rails.logger.info(!humanized_num.nil?)
       if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !iso_time_part && !humanized_num.nil?
         iso_time_part = true
         'T' + humanized_num
