@@ -144,15 +144,16 @@ module ChronicDuration
       joiner = ''
     end
 
-    time_component = false
+    iso_time_part = false
     result = [:years, :months, :weeks, :days, :hours, :minutes, :seconds].map do |t|
       next if t == :weeks && !opts[:weeks]
       num = eval(t.to_s)
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
       keep_zero = dividers[:keep_zero]
       keep_zero ||= opts[:keep_zero] if t == :seconds
-      if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !time_component && (num != 0 || keep_zero)
+      if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !iso_time_part && (num != 0 || keep_zero)
         res = 'T'
+        iso_time_part = true
       else
         res = ''
       end
