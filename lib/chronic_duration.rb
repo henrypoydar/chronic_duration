@@ -133,14 +133,27 @@ module ChronicDuration
         }.join(divider).gsub(/^(00:)+/, '').gsub(/^0/, '').gsub(/:$/, '')
       end
       joiner = ''
+    when :iso
+      dividers = {
+        :years => 'Y', :months => 'M', :weeks => 'W', :days => 'D', :hours => 'H', :minutes => 'M', :seconds => 'S',
+        :iso => true
+      }
+      process = lambda do |str|
+        str.insert(0, 'P')
+      end
+      joiner = ''
     end
 
+    time_component = false
     result = [:years, :months, :weeks, :days, :hours, :minutes, :seconds].map do |t|
       next if t == :weeks && !opts[:weeks]
       num = eval(t.to_s)
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
       keep_zero = dividers[:keep_zero]
       keep_zero ||= opts[:keep_zero] if t == :seconds
+      if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !time_component && (num != 0 || keep_zero)
+        'T'
+      end
       humanize_time_unit( num, dividers[t], dividers[:pluralize], keep_zero )
     end.compact!
 
