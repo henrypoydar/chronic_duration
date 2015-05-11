@@ -151,11 +151,12 @@ module ChronicDuration
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
       keep_zero = dividers[:keep_zero]
       keep_zero ||= opts[:keep_zero] if t == :seconds
-      if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !iso_time_part && (num != 0 || keep_zero)
+      humanized_num = humanize_time_unit( dividers[t], dividers[:pluralize], keep_zero, dividers[:iso] )
+      if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !iso_time_part && !humanized_num.nil?
         iso_time_part = true
-        'T' + humanize_time_unit( dividers[t], dividers[:pluralize], keep_zero, dividers[:iso] )
+        'T' + humanized_time
       else
-        humanize_time_unit( dividers[t], dividers[:pluralize], keep_zero, dividers[:iso] )
+        humanized_time
       end
     end.compact!
 
