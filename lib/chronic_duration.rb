@@ -152,9 +152,8 @@ module ChronicDuration
       keep_zero = dividers[:keep_zero]
       keep_zero ||= opts[:keep_zero] if t == :seconds
       if [:hours, :minutes, :seconds].include? t && dividers[:iso] && !iso_time_part && (num != 0 || keep_zero)
-        res = 'T'
         iso_time_part = true
-        res + humanize_time_unit( dividers[t], dividers[:pluralize], keep_zero, dividers[:iso] )
+        'T' + humanize_time_unit( dividers[t], dividers[:pluralize], keep_zero, dividers[:iso] )
       else
         humanize_time_unit( dividers[t], dividers[:pluralize], keep_zero, dividers[:iso] )
       end
