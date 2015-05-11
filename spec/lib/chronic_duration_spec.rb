@@ -86,7 +86,8 @@ describe ChronicDuration do
           :short    => '1m 20s',
           :default  => '1 min 20 secs',
           :long     => '1 minute 20 seconds',
-          :chrono   => '1:20'
+          :chrono   => '1:20',
+          :iso      => 'PT1M20S'
         },
       (60 + 20.51) =>
         {
@@ -94,7 +95,8 @@ describe ChronicDuration do
           :short    => '1m 20.51s',
           :default  => '1 min 20.51 secs',
           :long     => '1 minute 20.51 seconds',
-          :chrono   => '1:20.51'
+          :chrono   => '1:20.51',
+          :iso      => 'PT1M20.51S' # Yuck. FIXME
         },
       (60 + 20.51928) =>
         {
@@ -102,7 +104,8 @@ describe ChronicDuration do
           :short    => '1m 20.51928s',
           :default  => '1 min 20.51928 secs',
           :long     => '1 minute 20.51928 seconds',
-          :chrono   => '1:20.51928'
+          :chrono   => '1:20.51928',
+          :iso      => 'PT1M20.51928S' # Yuck. FIXME
         },
       (4 * 3600 + 60 + 1) =>
         {
@@ -110,7 +113,8 @@ describe ChronicDuration do
           :short    => '4h 1m 1s',
           :default  => '4 hrs 1 min 1 sec',
           :long     => '4 hours 1 minute 1 second',
-          :chrono   => '4:01:01'
+          :chrono   => '4:01:01',
+          :iso      => 'PT4H1M1S'
         },
       (2 * 3600 + 20 * 60) =>
         {
@@ -118,7 +122,8 @@ describe ChronicDuration do
           :short    => '2h 20m',
           :default  => '2 hrs 20 mins',
           :long     => '2 hours 20 minutes',
-          :chrono   => '2:20'
+          :chrono   => '2:20',
+          :iso      => 'PT2H20M'
         },
       (2 * 3600 + 20 * 60) =>
         {
@@ -126,7 +131,8 @@ describe ChronicDuration do
           :short    => '2h 20m',
           :default  => '2 hrs 20 mins',
           :long     => '2 hours 20 minutes',
-          :chrono   => '2:20:00'
+          :chrono   => '2:20:00',
+          :iso      => 'PT2H20M'
         },
       (6 * 30 * 24 * 3600 + 24 * 3600) =>
         {
@@ -134,7 +140,8 @@ describe ChronicDuration do
           :short    => '6mo 1d',
           :default  => '6 mos 1 day',
           :long     => '6 months 1 day',
-          :chrono   => '6:01:00:00:00' # Yuck. FIXME
+          :chrono   => '6:01:00:00:00', # Yuck. FIXME
+          :iso      => 'P6M1D'
         },
       (365.25 * 24 * 3600 + 24 * 3600 ).to_i =>
         {
@@ -142,7 +149,8 @@ describe ChronicDuration do
           :short    => '1y 1d',
           :default  => '1 yr 1 day',
           :long     => '1 year 1 day',
-          :chrono   => '1:00:01:00:00:00'
+          :chrono   => '1:00:01:00:00:00',
+          :iso      => 'P1Y1D'
         },
       (3  * 365.25 * 24 * 3600 + 24 * 3600 ).to_i =>
         {
@@ -150,7 +158,8 @@ describe ChronicDuration do
           :short    => '3y 1d',
           :default  => '3 yrs 1 day',
           :long     => '3 years 1 day',
-          :chrono   => '3:00:01:00:00:00'
+          :chrono   => '3:00:01:00:00:00',
+          :iso      => 'P3Y1D'
         },
       (3600 * 24 * 30 * 18) =>
         {
@@ -158,7 +167,8 @@ describe ChronicDuration do
           :short    => '18mo',
           :default  => '18 mos',
           :long     => '18 months',
-          :chrono   => '18:00:00:00:00'
+          :chrono   => '18:00:00:00:00',
+          :iso      => 'P1Y6M'
         }
     }
 
@@ -177,7 +187,8 @@ describe ChronicDuration do
         :short    => '0s',
         :default  => '0 secs',
         :long     => '0 seconds',
-        :chrono   => '0'
+        :chrono   => '0',
+        :iso      => 'PT0S'
       },
         (false) =>
       {
@@ -185,7 +196,8 @@ describe ChronicDuration do
         :short    => nil,
         :default  => nil,
         :long     => nil,
-        :chrono   => '0'
+        :chrono   => '0',
+        :iso      => 'P' # ??? FIXME
       },
     }
 
