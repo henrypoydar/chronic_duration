@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_runtime_dependency "numerizer", "~> 0.1.1"
+  gem.add_runtime_dependency "i18n"
 
   gem.add_development_dependency "rake", "~> 10.0.3"
   gem.add_development_dependency "rspec", "~> 2.12.0"
