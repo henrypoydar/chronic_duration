@@ -23,6 +23,7 @@ describe ChronicDuration do
       '3 weeks and, 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
       '3 weeks, plus 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
       '3 weeks with 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
+      '1mon'                  => 3600 * 24 * 30,
       '1 month'               => 3600 * 24 * 30,
       '2 months'              => 3600 * 24 * 30 * 2,
       '18 months'             => 3600 * 24 * 30 * 18,
