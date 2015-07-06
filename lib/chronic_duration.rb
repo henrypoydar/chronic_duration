@@ -51,10 +51,12 @@ module ChronicDuration
 
     opts[:format] ||= :default
     opts[:keep_zero] ||= false
+    opts[:decimal_places] ||= seconds.to_s.split('.').last.length if seconds.is_a?(Float)
 
     years = months = weeks = days = hours = minutes = 0
 
-    decimal_places = seconds.to_s.split('.').last.length if seconds.is_a?(Float)
+    #decimal_places = seconds.to_s.split('.').last.length if seconds.is_a?(Float)
+    decimal_places = opts[:decimal_places]
 
     minute = 60
     hour = 60 * minute
