@@ -78,3 +78,4 @@ errm,pdf, brianjlandau, jduff, olauzon, roboman, ianlevesque, bolandrm
 * Smartly parse vacation-like durations (E.g., '4 days and 3 nights')
 * :chrono output option should probably change to something like 4 days 4:00:12 instead of 4:04:00:12
 * Other locale support
+
