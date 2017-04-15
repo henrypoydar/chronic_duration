@@ -137,6 +137,7 @@ module ChronicDuration
 
     result = [:years, :months, :weeks, :days, :hours, :minutes, :seconds].map do |t|
       next if t == :weeks && !opts[:weeks]
+      next if t == :seconds && !opts[:seconds]
       num = eval(t.to_s)
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
       keep_zero = dividers[:keep_zero]
