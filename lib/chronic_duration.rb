@@ -1,4 +1,4 @@
-require 'numerizer' unless defined?(Numerizer)
+require 'omnomnum' unless defined?(OmNomNum)
 
 module ChronicDuration
 
@@ -179,13 +179,13 @@ private
 
   def cleanup(string)
     res = string.downcase
-    res = filter_by_type(Numerizer.numerize(res))
+    res = filter_by_type(OmNomNum.normalize(res))
     res = res.gsub(float_matcher) {|n| " #{n} "}.squeeze(' ').strip
     res = filter_through_white_list(res)
   end
 
   def convert_to_number(string)
-    string.to_f % 1 > 0 ? string.to_f : string.to_i
+    string.to_r.to_f % 1 > 0 ? string.to_r.to_f : string.to_r.to_i
   end
 
   def duration_units_list
@@ -221,7 +221,7 @@ private
   end
 
   def float_matcher
-    /[0-9]*\.?[0-9]+/
+    /[0-9]*(\.|\/)?[0-9]+/
   end
 
   # Get rid of unknown words and map found

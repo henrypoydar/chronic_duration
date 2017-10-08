@@ -28,7 +28,9 @@ describe ChronicDuration do
       '18 months'             => 3600 * 24 * 30 * 18,
       '1 year 6 months'       => (3600 * 24 * (365.25 + 6 * 30)).to_i,
       'day'                   => 3600 * 24,
-      'minute 30s'            => 90
+      'minute 30s'            => 90,
+      '1/2 minute'                => 30,
+      '3/2 hours'                  => 1.5 * 60 * 60
     }
 
     context "when string can't be parsed" do
