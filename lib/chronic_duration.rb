@@ -233,11 +233,12 @@ private
         res << word.strip
         next
       end
-      stripped_word = word.strip.gsub(/^,/, '').gsub(/,$/, '')
+      stripped_word = word.strip.gsub(/^,|,$|\.$/, '')
       if mappings.has_key?(stripped_word)
         res << mappings[stripped_word]
-      elsif !join_words.include?(stripped_word) and ChronicDuration.raise_exceptions
-        raise DurationParseError, "An invalid word #{word.inspect} was used in the string to be parsed."
+      elsif !join_words.include?(stripped_word)
+        raise DurationParseError, "An invalid word #{word.inspect} was used in the string to be parsed." if ChronicDuration.raise_exceptions
+        res = [] # reset the number matcher
       end
     end
     # add '1' at front if string starts with something recognizable but not with a number, like 'day' or 'minute 30sec'
