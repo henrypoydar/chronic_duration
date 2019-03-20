@@ -5,6 +5,8 @@ describe ChronicDuration do
   describe ".parse" do
 
     @exemplars = {
+      "Let it sit for 60 minutes depending on your preference and time restrictions" => 60 * 60,
+      "Let it sit for 20-60 minutes depending on your preference and time restrictions" => 60 * 60,
       '5 min.'       => (60 * 5).to_i,
       '1:20'                  => 60 + 20,
       '1:20.51'               => 60 + 20.51,
