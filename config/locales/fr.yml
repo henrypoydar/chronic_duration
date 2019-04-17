@@ -2,34 +2,34 @@ fr:
   chronic_duration:
     dividers:
       micro:
-        years: 'y'
-        months: 'mo'
-        weeks: 'w'
-        days: 'd'
+        years: 'a'
+        months: 'm.'
+        weeks: 's.'
+        days: 'j'
         hours: 'h'
         minutes: 'm'
         seconds: 's'
       short:
-        years: 'y'
-        months: 'mo'
-        weeks: 'w'
-        days: 'd'
+        years: 'a'
+        months: 'm.'
+        weeks: 's.'
+        days: 'j'
         hours: 'h'
         minutes: 'm'
         seconds: 's'
       default:
         years:
-          one: ' yr'
-          other: ' yrs'
+          one: ' an'
+          other: ' ans'
         months:
           one: ' mo'
           other: ' mos'
         weeks:
-          one: ' wk'
-          other: ' wks'
+          one: ' sem'
+          other: ' sems'
         days:
-          one: ' day'
-          other: ' days'
+          one: ' jr'
+          other: ' jrs'
         hours:
           one: ' hr'
           other: ' hrs'
