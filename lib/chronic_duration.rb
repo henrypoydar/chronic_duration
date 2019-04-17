@@ -1,4 +1,7 @@
 require 'numerizer' unless defined?(Numerizer)
+require 'i18n' unless defined?(I18n)
+locales_dir = File.join(File.expand_path(File.dirname(__FILE__)),'..','config','locales')
+I18n.load_path += Dir[locales_dir.to_s+'/*.yml']
 
 module ChronicDuration
 
@@ -51,6 +54,7 @@ module ChronicDuration
 
     opts[:format] ||= :default
     opts[:keep_zero] ||= false
+    opts[:locale] ||= I18n.locale||'en'
 
     years = months = weeks = days = hours = minutes = 0
 
@@ -99,49 +103,25 @@ module ChronicDuration
       end
     end
 
-    joiner = opts.fetch(:joiner) { ' ' }
-    process = nil
-
-    case opts[:format]
-    when :micro
-      dividers = {
-        :years => 'y', :months => 'mo', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
-      joiner = ''
-    when :short
-      dividers = {
-        :years => 'y', :months => 'mo', :weeks => 'w', :days => 'd', :hours => 'h', :minutes => 'm', :seconds => 's' }
-    when :default
-      dividers = {
-        :years => ' yr', :months => ' mo', :weeks => ' wk', :days => ' day', :hours => ' hr', :minutes => ' min', :seconds => ' sec',
-        :pluralize => true }
-    when :long
-      dividers = {
-        :years => ' year', :months => ' month', :weeks => ' week', :days => ' day', :hours => ' hour', :minutes => ' minute', :seconds => ' second',
-        :pluralize => true }
-    when :chrono
-      dividers = {
-        :years => ':', :months => ':', :weeks => ':', :days => ':', :hours => ':', :minutes => ':', :seconds => ':', :keep_zero => true }
-      process = lambda do |str|
-        # Pad zeros
-        # Get rid of lead off times if they are zero
-        # Get rid of lead off zero
-        # Get rid of trailing :
-        divider = ':'
-        str.split(divider).map { |n|
-          # add zeros only if n is an integer
-          n.include?('.') ? ("%04.#{decimal_places}f" % n) : ("%02d" % n)
-        }.join(divider).gsub(/^(00:)+/, '').gsub(/^0/, '').gsub(/:$/, '')
-      end
-      joiner = ''
-    end
+    process, joiner = process_and_joiner(opts[:format], decimal_places)
+    joiner ||= opts.fetch(:joiner) { ' ' }
 
     result = [:years, :months, :weeks, :days, :hours, :minutes, :seconds].map do |t|
       next if t == :weeks && !opts[:weeks]
       num = eval(t.to_s)
       num = ("%.#{decimal_places}f" % num) if num.is_a?(Float) && t == :seconds
-      keep_zero = dividers[:keep_zero]
+      keep_zero = (opts[:format] == :chrono)
       keep_zero ||= opts[:keep_zero] if t == :seconds
-      humanize_time_unit( num, dividers[t], dividers[:pluralize], keep_zero )
+
+      if opts[:format] == :chrono
+        unit = ':'
+      else
+        hash = {:locale => opts[:locale]}
+        hash[:count] = num if [:default, :long].include?(opts[:format])
+        unit = I18n.t("chronic_duration.dividers.#{opts[:format]}.#{t}", hash)
+      end
+
+      humanize_time_unit(num, unit, keep_zero)
     end.compact!
 
     result = result[0...opts[:units]] if opts[:units]
@@ -158,12 +138,31 @@ module ChronicDuration
 
 private
 
-  def humanize_time_unit(number, unit, pluralize, keep_zero)
+  def process_and_joiner(format, decimal_places)
+    process = joiner = nil
+    case format
+    when :micro
+      joiner = ''
+    when :chrono
+      process = lambda do |str|
+        # Pad zeros
+        # Get rid of lead off times if they are zero
+        # Get rid of lead off zero
+        # Get rid of trailing :
+        divider = ':'
+        str.split(divider).map { |n|
+          # add zeros only if n is an integer
+          n.include?('.') ? ("%04.#{decimal_places}f" % n) : ("%02d" % n)
+        }.join(divider).gsub(/^(00:)+/, '').gsub(/^0/, '').gsub(/:$/, '')
+      end
+      joiner = ''
+    end
+    return [process, joiner]
+  end
+
+  def humanize_time_unit(number, unit, keep_zero)
     return nil if number == 0 && !keep_zero
-    res = "#{number}#{unit}"
-    # A poor man's pluralizer
-    res << 's' if !(number == 1) && pluralize
-    res
+    "#{number}#{unit}"
   end
 
   def calculate_from_words(string, opts)

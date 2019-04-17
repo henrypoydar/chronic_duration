@@ -1,0 +1,63 @@
+it:
+  chronic_duration:
+    dividers:
+      micro:
+        years: 'a'
+        months: 'me'
+        weeks: 'se'
+        days: 'g'
+        hours: 'o'
+        minutes: 'm'
+        seconds: 's'
+      short:
+        years: 'a'
+        months: 'me'
+        weeks: 'se'
+        days: 'g'
+        hours: 'o'
+        minutes: 'm'
+        seconds: 's'
+      default:
+        years:
+          one: ' an'
+          other: ' an'
+        months:
+          one: ' me'
+          other: ' me'
+        weeks:
+          one: ' set'
+          other: ' set'
+        days:
+          one: ' gg'
+          other: ' gg'
+        hours:
+          one: ' ora'
+          other: ' ore'
+        minutes:
+          one: ' min'
+          other: ' min'
+        seconds:
+          one: ' sec'
+          other: ' sec'
+      long:
+        years:
+          one: ' anno'
+          other: ' anni'
+        months:
+          one: ' mese'
+          other: ' mesi'
+        weeks:
+          one: ' settimana'
+          other: ' settimane'
+        days:
+          one: ' giorno'
+          other: ' giorni'
+        hours:
+          one: ' ora'
+          other: ' ore'
+        minutes:
+          one: ' minuto'
+          other: ' minuti'
+        seconds:
+          one: ' secondo'
+          other: ' secondi'
