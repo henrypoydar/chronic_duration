@@ -1,0 +1,63 @@
+fr:
+  chronic_duration:
+    dividers:
+      micro:
+        years: 'a'
+        months: 'm.'
+        weeks: 's.'
+        days: 'j'
+        hours: 'h'
+        minutes: 'm'
+        seconds: 's'
+      short:
+        years: 'a'
+        months: 'm.'
+        weeks: 's.'
+        days: 'j'
+        hours: 'h'
+        minutes: 'm'
+        seconds: 's'
+      default:
+        years:
+          one: ' an'
+          other: ' ans'
+        months:
+          one: ' mo'
+          other: ' mos'
+        weeks:
+          one: ' sem'
+          other: ' sems'
+        days:
+          one: ' jr'
+          other: ' jrs'
+        hours:
+          one: ' hr'
+          other: ' hrs'
+        minutes:
+          one: ' min'
+          other: ' mins'
+        seconds:
+          one: ' sec'
+          other: ' secs'
+      long:
+        years:
+          one: ' an'
+          other: ' années'
+        months:
+          one: ' mois'
+          other: ' mois'
+        weeks:
+          one: ' semaine'
+          other: ' semaines'
+        days:
+          one: ' jour'
+          other: ' jours'
+        hours:
+          one: ' heure'
+          other: ' heures'
+        minutes:
+          one: ' minute'
+          other: ' minutes'
+        seconds:
+          one: ' seconde'
+          other: ' secondes'
