@@ -28,6 +28,9 @@ module ChronicDuration
   # Given an integer and an optional format,
   # returns a formatted string representing elapsed time
   def output(seconds, opts = {})
+    negative = seconds.negative?
+    seconds = seconds.abs
+
     int = seconds.to_i
     seconds = int if seconds - int == 0 # if seconds end with .0
 
@@ -112,6 +115,8 @@ module ChronicDuration
     result = result[0...opts[:units]] if opts[:units]
 
     result = result.join(joiner)
+
+    result = "-#{result}" if negative
 
     if process
       result = process.call(result)
