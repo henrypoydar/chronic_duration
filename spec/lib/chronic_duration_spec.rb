@@ -201,6 +201,10 @@ describe ChronicDuration do
       ChronicDuration.output(45*24*60*60, :weeks => true).should =~ /.*wk.*/
     end
 
+    it "returns hours and minutes only when :hours_only option specified" do
+      ChronicDuration.output(395*24*60*60 + 15*60, :limit_to_hours => true).should == '9480 hrs 15 mins'
+    end
+
     it "returns the specified number of units if provided" do
       ChronicDuration.output(4 * 3600 + 60 + 1, units: 2).should == '4 hrs 1 min'
       ChronicDuration.output(6 * 30 * 24 * 3600 + 24 * 3600 + 3600 + 60 + 1, units: 3, format: :long).should == '6 months 1 day 1 hour'

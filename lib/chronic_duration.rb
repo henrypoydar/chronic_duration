@@ -60,9 +60,11 @@ module ChronicDuration
       if minutes >= 60
         hours = (minutes / 60).to_i
         minutes = (minutes % 60).to_i
-        if hours >= 8
-          days = (hours / 8).to_i
-          hours = (hours % 8).to_i
+        if !opts[:limit_to_hours]
+          if hours >= 8
+            days = (hours / 8).to_i
+            hours = (hours % 8).to_i
+          end
         end
       end
     end
