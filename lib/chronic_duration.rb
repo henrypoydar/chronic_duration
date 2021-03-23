@@ -151,6 +151,7 @@ private
 
   def cleanup(string)
     res = string.downcase
+    res = res.gsub(/[0-9]*\,?[0-9]+/) { |m| m.gsub(',', '') }
     res = filter_by_type(Numerizer.numerize(res))
     res = res.gsub(float_matcher) {|n| " #{n} "}.squeeze(' ').strip
     res = filter_through_white_list(res)
