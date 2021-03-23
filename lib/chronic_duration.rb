@@ -47,7 +47,7 @@ module ChronicDuration
     month = 22 * day
     year = 260 * day
 
-    if seconds >= 31557600 && seconds%year < seconds%month
+    if seconds >= year && !opts[:limit_to_hours]
       years = seconds / year
       months = seconds % year / month
       days = seconds % year % month / day

@@ -1,9 +1,13 @@
 require 'spec_helper'
-
 describe ChronicDuration do
 
   describe ".parse" do
-
+    minute = 60
+    hour = 60 * minute
+    work_day = 8 * hour
+    work_month = 22 * work_day
+    work_year = 260 * work_day
+    work_week = 5 * work_day
     @exemplars = {
       '1:20'                  => 60 + 20,
       '1:20.51'               => 60 + 20.51,
@@ -13,22 +17,23 @@ describe ChronicDuration do
       'three mins four sec'          => 3 * 60 + 4,
       '2 hrs 20 min'          => 2 * 3600 + 20 * 60,
       '2h20min'               => 2 * 3600 + 20 * 60,
-      '6 mos 1 day'           => 6 * 30 * 24 * 3600 + 24 * 3600,
-      '1 year 6 mos 1 day'    => 1 * 31557600 + 6 * 30 * 24 * 3600 + 24 * 3600,
+      '6 mos 1 day'           => 6 * work_month + 1 * work_day,
+      '1 year 6 mos 1 day'    => 1 * work_year + 6 * work_month + 1 * work_day,
       '2.5 hrs'               => 2.5 * 3600,
-      '47 yrs 6 mos and 4.5d' => 47 * 31557600 + 6 * 30 * 24 * 3600 + 4.5 * 24 * 3600,
+      '47 yrs 6 mos and 4.5d' => 47 * work_year + 6 * work_month + 4.5 * work_day,
       'two hours and twenty minutes' => 2 * 3600 + 20 * 60,
       'four hours and forty minutes' => 4 * 3600 + 40 * 60,
       'four hours, and fourty minutes' => 4 * 3600 + 40 * 60,
-      '3 weeks and, 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
-      '3 weeks, plus 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
-      '3 weeks with 2 days' => 3600 * 24 * 7 * 3 + 3600 * 24 * 2,
-      '1 month'               => 3600 * 24 * 30,
-      '2 months'              => 3600 * 24 * 30 * 2,
-      '18 months'             => 3600 * 24 * 30 * 18,
-      '1 year 6 months'       => (3600 * 24 * (365.25 + 6 * 30)).to_i,
-      'day'                   => 3600 * 24,
-      'minute 30s'            => 90
+      '3 weeks and, 2 days' => 3 * work_week + 2 * work_day,
+      '3 weeks, plus 2 days' => 3 * work_week + 2 * work_day,
+      '3 weeks with 2 days' => 3 * work_week + 2 * work_day,
+      '1 month'               => 1 * work_month,
+      '2 months'              => 2 * work_month,
+      '18 months'             => 18 * work_month,
+      '1 year 6 months'       => 1 * work_year + 6 * work_month,
+      'day'                   => work_day,
+      'minute 30s'            => 90,
+      '1,000 mins'            => 1000 * 60,
     }
 
     context "when string can't be parsed" do
@@ -82,61 +87,53 @@ describe ChronicDuration do
     @exemplars = {
       (60 + 20) =>
         {
-          :micro    => '1m20s',
-          :short    => '1m 20s',
+          :micro    => '1min20s',
+          :short    => '1min 20s',
           :default  => '1 min 20 secs',
           :long     => '1 minute 20 seconds',
           :chrono   => '1:20'
         },
       (60 + 20.51) =>
         {
-          :micro    => '1m20.51s',
-          :short    => '1m 20.51s',
+          :micro    => '1min20.51s',
+          :short    => '1min 20.51s',
           :default  => '1 min 20.51 secs',
           :long     => '1 minute 20.51 seconds',
           :chrono   => '1:20.51'
         },
       (60 + 20.51928) =>
         {
-          :micro    => '1m20.51928s',
-          :short    => '1m 20.51928s',
+          :micro    => '1min20.51928s',
+          :short    => '1min 20.51928s',
           :default  => '1 min 20.51928 secs',
           :long     => '1 minute 20.51928 seconds',
           :chrono   => '1:20.51928'
         },
       (4 * 3600 + 60 + 1) =>
         {
-          :micro    => '4h1m1s',
-          :short    => '4h 1m 1s',
+          :micro    => '4h1min1s',
+          :short    => '4h 1min 1s',
           :default  => '4 hrs 1 min 1 sec',
           :long     => '4 hours 1 minute 1 second',
           :chrono   => '4:01:01'
         },
       (2 * 3600 + 20 * 60) =>
         {
-          :micro    => '2h20m',
-          :short    => '2h 20m',
+          :micro    => '2h20min',
+          :short    => '2h 20min',
           :default  => '2 hrs 20 mins',
           :long     => '2 hours 20 minutes',
           :chrono   => '2:20'
         },
       (2 * 3600 + 20 * 60) =>
         {
-          :micro    => '2h20m',
-          :short    => '2h 20m',
+          :micro    => '2h20min',
+          :short    => '2h 20min',
           :default  => '2 hrs 20 mins',
           :long     => '2 hours 20 minutes',
           :chrono   => '2:20:00'
         },
-      (6 * 30 * 24 * 3600 + 24 * 3600) =>
-        {
-          :micro    => '6mo1d',
-          :short    => '6mo 1d',
-          :default  => '6 mos 1 day',
-          :long     => '6 months 1 day',
-          :chrono   => '6:01:00:00:00' # Yuck. FIXME
-        },
-      (365.25 * 24 * 3600 + 24 * 3600 ).to_i =>
+      (3600 * 8 * 260 + 8 * 3600 ).to_i =>
         {
           :micro    => '1y1d',
           :short    => '1y 1d',
@@ -144,7 +141,7 @@ describe ChronicDuration do
           :long     => '1 year 1 day',
           :chrono   => '1:00:01:00:00:00'
         },
-      (3  * 365.25 * 24 * 3600 + 24 * 3600 ).to_i =>
+      (3 * 260 * 8 * 3600 + 8 * 3600).to_i =>
         {
           :micro    => '3y1d',
           :short    => '3y 1d',
@@ -152,14 +149,6 @@ describe ChronicDuration do
           :long     => '3 years 1 day',
           :chrono   => '3:00:01:00:00:00'
         },
-      (3600 * 24 * 30 * 18) =>
-        {
-          :micro    => '18mo',
-          :short    => '18mo',
-          :default  => '18 mos',
-          :long     => '18 months',
-          :chrono   => '18:00:00:00:00'
-        }
     }
 
     @exemplars.each do |k, v|
@@ -197,17 +186,13 @@ describe ChronicDuration do
       end
     end
 
-    it "returns weeks when needed" do
-      ChronicDuration.output(45*24*60*60, :weeks => true).should =~ /.*wk.*/
-    end
-
     it "returns hours and minutes only when :hours_only option specified" do
       ChronicDuration.output(395*24*60*60 + 15*60, :limit_to_hours => true).should == '9480 hrs 15 mins'
     end
 
     it "returns the specified number of units if provided" do
       ChronicDuration.output(4 * 3600 + 60 + 1, units: 2).should == '4 hrs 1 min'
-      ChronicDuration.output(6 * 30 * 24 * 3600 + 24 * 3600 + 3600 + 60 + 1, units: 3, format: :long).should == '6 months 1 day 1 hour'
+      ChronicDuration.output(6 * 260 * 8 * 3600 + 8 * 3600 + 3600 + 60 + 1, units: 3, format: :long).should == '6 years 1 day 1 hour'
     end
 
     context "when the format is not specified" do
@@ -225,11 +210,7 @@ describe ChronicDuration do
         end
       end
     end
-    
-    context "when the unit multiplier changes" do
-      
-    end
-    
+
   end
 
   describe ".filter_by_type" do
@@ -259,7 +240,7 @@ describe ChronicDuration do
     end
 
     it "inserts spaces where there aren't any" do
-      ChronicDuration.instance_eval("cleanup('4m11.5s')").should == '4 minutes 11.5 seconds'
+      ChronicDuration.instance_eval("cleanup('4min11.5s')").should == '4 minutes 11.5 seconds'
     end
 
   end
